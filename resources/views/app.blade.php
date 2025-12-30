@@ -10,6 +10,8 @@
     <meta name="keywords" content="">
     <meta name="author" content="Vitor Vieira Web Developer">
 
+    <link rel="icon" type="image/png" href="{{ asset('logo.png') }}" />
+
     <meta name="theme-color" content="#ffffff">
     <link rel="preload" as="style"
         href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap">

@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from 'recharts';
-import { Trophy, Calendar, MapPin, Activity, Timer, Zap, TrendingUp, Clock, LogOut, Settings } from 'lucide-react';
+import { Trophy, Calendar, MapPin, Activity, Timer, Zap, TrendingUp, Clock, LogOut, Settings, RefreshCw } from 'lucide-react';
 
 const SLIDE_DURATION = 15000;
 const STRAVA_ORANGE = '#FC4C02';
 
 export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isSyncing, setIsSyncing] = useState(false);
     const totalSlides = 3;
 
     useEffect(() => {
@@ -21,6 +22,16 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
     const weeklyGoal = raceGoal.weeklyGoal;
     const progressPercent = Math.min((weeklyDistance / weeklyGoal) * 100, 100);
 
+    const handleSync = () => {
+        setIsSyncing(true);
+        router.visit(route('dashboard.index'), {
+            data: { refresh: true },
+            only: ['stravaData', 'weeklyHistory'],
+            preserveScroll: true,
+            onFinish: () => setIsSyncing(false),
+        });
+    };
+
     return (
         <div className="min-h-screen w-full bg-[#18181b] text-white font-sans flex flex-col lg:flex-row overflow-x-hidden">
             <Head title="TV Dashboard" />
@@ -33,13 +44,24 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
                             <span className="text-xs lg:text-sm font-bold tracking-[0.2em] uppercase">Objetivo Principal</span>
                         </div>
 
-                        <Link
-                            href={route('goals.edit')}
-                            className="text-gray-600 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full"
-                            title="Editar Objetivo"
-                        >
-                            <Settings size={18} />
-                        </Link>
+                        <div className="flex gap-3">
+                            <Link
+                                href={route('goals.edit')}
+                                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
+                                title="Editar Objetivo"
+                            >
+                                <Settings size={20} />
+                            </Link>
+
+                            <button
+                                onClick={handleSync}
+                                disabled={isSyncing}
+                                className={`p-2 rounded-full transition-all text-gray-400 hover:text-white hover:bg-gray-800 ${isSyncing ? 'animate-spin text-[#FC4C02]' : ''} cursor-pointer`}
+                                title="Sincronizar com Strava"
+                            >
+                                <RefreshCw size={20} />
+                            </button>
+                        </div>
                     </div>
 
                     <h1 className="text-3xl lg:text-5xl font-bold leading-tight mb-4 text-white">

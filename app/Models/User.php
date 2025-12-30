@@ -45,4 +45,15 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function stravaAccount()
+    {
+        return $this->hasOne(StravaAccount::class);
+    }
+
+
+    public function currentGoal()
+    {
+        return $this->hasOne(RaceGoal::class)->latestOfMany();
+    }
 }

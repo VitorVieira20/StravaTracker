@@ -17,7 +17,7 @@ class RedirectIfNotAuthenticated
     public function handle(Request $request, Closure $next): Response
     {
         if (!Auth::check()) {
-            return redirect()->route('login.index');
+            return redirect()->route('strava.index');
         }
 
         return $next($request);

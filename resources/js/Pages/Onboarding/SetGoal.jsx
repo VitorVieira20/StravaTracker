@@ -24,7 +24,7 @@ export default function SetGoal({ goal }) {
         <div className="min-h-screen bg-[#18181b] flex flex-col items-center justify-center p-4 text-white font-sans">
             <Head title="Definir Objetivo" />
 
-            <div className="w-full max-w-lg">
+            <div className="w-full max-w-2xl">
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-black mb-2">
                         {isEditing ? 'Ajustar Detalhes' : 'Qual é o teu próximo desafio?'}

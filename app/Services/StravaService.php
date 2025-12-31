@@ -21,7 +21,7 @@ class StravaService
 
     protected function ensureValidToken()
     {
-        if (Carbon::now()->timestamp >= $this->account->expires_at->timestamp) {
+        if (Carbon::now()->timestamp >= $this->account->expires_at) {
             try {
                 $response = Http::asForm()->post('https://www.strava.com/oauth/token', [
                     'client_id' => config('services.strava.client_id'),

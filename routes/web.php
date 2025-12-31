@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RaceGoalController;
 use App\Http\Controllers\StravaAuthController;
+use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -30,3 +31,7 @@ Route::middleware('guest.redirect')->group(function () {
     Route::get('/auth/strava/redirect', [StravaAuthController::class, 'redirect'])->name('strava.redirect');
     Route::get('/auth/strava/callback', [StravaAuthController::class, 'callback'])->name('strava.callback');
 });
+
+// SUPPORT CONTACTS
+Route::get('/support', [SupportController::class, 'create'])->name('support.create');
+Route::post('/support', [SupportController::class, 'store'])->name('support.store');

@@ -40,4 +40,10 @@ return [
         'client_secret' => env('STRAVA_CLIENT_SECRET'),
         'redirect' => env('STRAVA_REDIRECT_URI'),
     ],
+
+    'discord' => [
+        'channels' => [
+            'support' => env('DISCORD_SUPPORT_WEBHOOK_URL')
+        ]
+    ]
 ];

@@ -57,7 +57,7 @@ Unlike deep technical analysis apps (like TrainingPeaks), Run Tracker focuses on
 
 The platform was built with a focus on performance, scalability, and modern UX.
 
-* **Backend:** Laravel 12 (PHP) with Queues for asynchronous processing.
+* **Backend:** Laravel 1 (PHP) with Queues for asynchronous processing.
 * **Frontend:** React.js rendered via Inertia.js.
 * **Database:** MySQL.
 * **Design:** Tailwind CSS (Native Dark Mode).
@@ -72,7 +72,7 @@ This source code is made available for technical competency demonstration and po
 
 1.  **Clone the repository**
     ```bash
-    git clone [https://github.com/VitorVieira20/StravaTracker.git](https://github.com/VitorVieira20/StravaTracker.git)
+    git clone https://github.com/VitorVieira20/StravaTracker.git
     ```
 2.  **Install dependencies**
     ```bash
@@ -82,7 +82,7 @@ This source code is made available for technical competency demonstration and po
     ```env
     STRAVA_CLIENT_ID=your_id
     STRAVA_CLIENT_SECRET=your_secret
-    DISCORD_SUPPORT_WEBHOOK_URL=your_webhook
+    DISCORD_WEBHOOK_URL=your_webhook
     ```
 4.  **Run**
     ```bash
@@ -107,5 +107,5 @@ For inquiries regarding commercial licensing or partnerships, please contact via
 
 ---
 <p align="center">
-  Made by <a href="https://vitorvieiradev.com">Vitor Vieira</a>
+  Made with ❤️ and 🏃 by <a href="https://vitorvieiradev.com">Vítor Vieira</a>
 </p>

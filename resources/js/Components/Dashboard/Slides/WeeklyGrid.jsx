@@ -5,7 +5,7 @@ export default function WeeklyGridSlide({ weeklyHistory }) {
     return (
         <div className="animate-in fade-in slide-in-from-right-4 duration-700 h-auto flex flex-col justify-start pt-12 lg:pt-0">
 
-            <div className="mb-4 lg:hidden">
+            <div className="mb-4">
                 <h2 className="text-xl font-bold text-gray-200 flex items-center">
                     <Calendar className="mr-2 text-[#FC4C02]" size={20} /> Histórico
                 </h2>

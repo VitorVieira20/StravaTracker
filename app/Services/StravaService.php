@@ -207,8 +207,16 @@ class StravaService
 
     public function predictRaceTime($recentRuns, $targetDistanceKm)
     {
-        $relevantRuns = $recentRuns->filter(function ($run) {
-            return $run['distance_km'] >= 3;
+        $minDistance = 3;
+
+        if ($targetDistanceKm <= 1) {
+            $minDistance = 0.05;
+        } elseif ($targetDistanceKm <= 5) {
+            $minDistance = 1;
+        }
+
+        $relevantRuns = $recentRuns->filter(function ($run) use ($minDistance) {
+            return $run['distance_km'] >= $minDistance;
         });
 
         if ($relevantRuns->isEmpty()) {

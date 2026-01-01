@@ -1,17 +1,16 @@
 import { Calendar, Timer } from "lucide-react";
+import useTranslation from '@/Hooks/useTranslation';
 
 export default function WeeklyGridSlide({ weeklyHistory }) {
+    const { t } = useTranslation();
 
     return (
-        // 1. Alterado h-auto para h-full
-        // 2. Alterado justify-start para justify-between (empurra o conteúdo para as pontas)
         <div className="animate-in fade-in slide-in-from-right-4 duration-700 h-full flex flex-col justify-between pt-12 lg:pt-0">
 
-            {/* --- BLOCO SUPERIOR (Header + Grid Principal) --- */}
             <div className="w-full">
                 <div className="mb-4">
                     <h2 className="text-xl font-bold text-gray-200 flex items-center">
-                        <Calendar className="mr-2 text-[#FC4C02]" size={20} /> Histórico
+                        <Calendar className="mr-2 text-[#FC4C02]" size={20} /> {t('slide_history')}
                     </h2>
                 </div>
 
@@ -62,8 +61,6 @@ export default function WeeklyGridSlide({ weeklyHistory }) {
                 </div>
             </div>
 
-            {/* --- BLOCO INFERIOR (Quadrados Anuais) --- */}
-            {/* Ajustei o mt-6 para mt-4 e mantive o mb-8 para dar margem segura em baixo */}
             <div className="flex flex-wrap w-full gap-1 lg:gap-1.5 content-center mt-4 mb-8 justify-center lg:justify-start">
                 {[...weeklyHistory].reverse().map((week, idx) => {
                     let intensityClass = "bg-gray-800";

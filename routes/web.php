@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\RaceGoalController;
 use App\Http\Controllers\StravaAuthController;
 use App\Http\Controllers\SupportController;
@@ -35,3 +36,7 @@ Route::middleware('guest.redirect')->group(function () {
 // SUPPORT CONTACTS
 Route::get('/support', [SupportController::class, 'create'])->name('support.create');
 Route::post('/support', [SupportController::class, 'store'])->name('support.store');
+
+
+// LANGUAGE
+Route::post('/language', [LanguageController::class, 'update'])->name('language.update');

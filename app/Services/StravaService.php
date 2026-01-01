@@ -100,7 +100,11 @@ class StravaService
                 $distanceKm = $activity['distance'] / 1000;
                 $movingTimeSeconds = $activity['moving_time'];
 
-                $paceSeconds = $distanceKm > 0 ? $movingTimeSeconds / $distanceKm : 0;
+                $speedMetersPerSecond = $activity['average_grade_adjusted_speed'] ?? $activity['average_speed'] ?? 0;
+
+                $paceSeconds = $speedMetersPerSecond > 0 ? (1000 / $speedMetersPerSecond) : 0;
+
+                $watts = $activity['average_watts'] ?? 0;
 
                 return [
                     'id' => $activity['id'],
@@ -110,7 +114,9 @@ class StravaService
                     'moving_time_seconds' => $movingTimeSeconds,
                     'time_formatted' => gmdate("H:i:s", $movingTimeSeconds),
                     'pace_formatted' => gmdate("i:s", $paceSeconds),
-                    'raw_date' => Carbon::parse($activity['start_date_local'])
+                    'raw_date' => Carbon::parse($activity['start_date_local']),
+                    'pace_seconds' => $paceSeconds,
+                    'watts' => $watts
                 ];
             })
             ->values();
@@ -153,12 +159,14 @@ class StravaService
         );
 
         $runs = $this->filterActivitiesByRun($rawActivities);
+
         $weeklyHistory = $this->getWeeklyHistory($runs);
 
         $currentWeekStart = Carbon::now()->startOfWeek();
         $currentWeekDistance = $runs->where('raw_date', '>=', $currentWeekStart)->sum('distance_km');
 
-        $last4Runs = $runs->sortByDesc('raw_date')->take(4);
+        $last4Runs = $runs->slice(-4, 4)->reverse();
+
         $avgPaceSeconds = 0;
         if ($last4Runs->sum('distance_km') > 0) {
             $avgPaceSeconds = $last4Runs->sum('moving_time_seconds') / $last4Runs->sum('distance_km');
@@ -171,25 +179,55 @@ class StravaService
             ];
         })->values();
 
+        $prediction = $this->predictRaceTime($runs, $goal->race_distance ?? 42.195);
 
         return [
             'stravaData' => [
                 'currentWeekDistance' => round($currentWeekDistance, 1),
                 'totalDistance' => round($runs->sum('distance_km'), 1),
                 'recentAvgPace' => gmdate("i:s", $avgPaceSeconds),
+                'racePrediction' => $prediction,
                 'chartData' => $chartData,
-                'activities' => $runs->sortByDesc('raw_date')->take(5)->map(function ($run) {
+                'activities' => $runs->slice(-5, 5)->reverse()->map(function ($run) {
                     return [
                         'id' => $run['id'],
                         'name' => $run['name'],
                         'date' => $run['raw_date']->diffForHumans(),
                         'distance' => $run['distance_km'],
                         'pace' => $run['pace_formatted'],
-                        'time' => $run['time_formatted']
+                        'time' => $run['time_formatted'],
+                        'watts' => $run['watts']
                     ];
                 })->values()
             ],
             'weeklyHistory' => $weeklyHistory
+        ];
+    }
+
+
+    public function predictRaceTime($recentRuns, $targetDistanceKm)
+    {
+        $relevantRuns = $recentRuns->filter(function ($run) {
+            return $run['distance_km'] >= 3;
+        });
+
+        if ($relevantRuns->isEmpty()) {
+            return null;
+        }
+
+        $bestRun = $relevantRuns->sortBy(function ($run) {
+            return $run['pace_seconds'];
+        })->first();
+
+        $d1 = $bestRun['distance_km'];
+        $t1_seconds = $bestRun['moving_time_seconds'];
+
+        $predictedSeconds = $t1_seconds * pow(($targetDistanceKm / $d1), 1.06);
+
+        return [
+            'time_formatted' => gmdate("H:i:s", $predictedSeconds),
+            'base_run_name' => $bestRun['name'],
+            'predicted_pace' => gmdate("i:s", $predictedSeconds / $targetDistanceKm)
         ];
     }
 }

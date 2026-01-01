@@ -7,6 +7,7 @@ export default function SetGoal({ goal }) {
         name: goal?.name || '',
         race_date: goal?.race_date ? goal.race_date.split('T')[0] : '',
         location: goal?.location || '',
+        race_distance: goal?.race_distance || 42.195,
         start_date: goal?.start_date ? goal.start_date.split('T')[0] : new Date().toISOString().split('T')[0],
         weekly_goal_km: goal?.weekly_goal_km || 40
     });
@@ -57,6 +58,23 @@ export default function SetGoal({ goal }) {
                             placeholder="Ex: Lisboa, Portugal"
                             className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0"
                         />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Distância da Prova (km)</label>
+
+                        <div className="flex items-center gap-4">
+                            <input
+                                type="number"
+                                step="0.001"
+                                value={data.race_distance}
+                                onChange={e => setData('race_distance', e.target.value)}
+                                className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0 font-mono"
+                                placeholder="42.195"
+                            />
+                            <span className="text-gray-500 font-bold">km</span>
+                        </div>
+                        {errors.race_distance && <div className="text-red-500 text-xs mt-1">{errors.race_distance}</div>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">

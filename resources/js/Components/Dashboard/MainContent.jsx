@@ -5,7 +5,7 @@ import WeeklyGridSlide from "./Slides/WeeklyGrid";
 
 const SLIDE_DURATION = 15000;
 
-export default function DashboardMainContent({ stravaData, weeklyHistory, currentSlide, setCurrentSlide }) {    
+export default function DashboardMainContent({ stravaData, weeklyHistory, currentSlide, setCurrentSlide, isScrollingRef, totalSlides }) {    
     useEffect(() => {
         const timer = setInterval(() => {
             if (!isScrollingRef.current) {

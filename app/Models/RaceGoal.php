@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class RaceGoal extends Model
 {
     protected $fillable = [
-        'user_id', 'name', 'race_date', 'location', 'start_date', 'weekly_goal_km'
+        'user_id', 'name', 'race_date', 'location', 'race_distance', 'start_date', 'weekly_goal_km'
     ];
 
     protected $casts = [

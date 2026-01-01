@@ -20,6 +20,7 @@ class RaceGoalController extends Controller
             'name' => 'required|string|max:255',
             'race_date' => 'required|date|after:today',
             'location' => 'required|string|max:255',
+            'race_distance' => 'required|numeric|min:1|max:500',
             'start_date' => 'required|date|before:race_date',
             'weekly_goal_km' => 'required|integer|min:1|max:200',
         ]);
@@ -52,6 +53,7 @@ class RaceGoalController extends Controller
             'name' => 'required|string|max:255',
             'race_date' => 'required|date|after:today',
             'location' => 'required|string|max:255',
+            'race_distance' => 'required|numeric|min:1|max:500',
             'start_date' => 'required|date|before:race_date',
             'weekly_goal_km' => 'required|integer|min:1|max:200',
         ]);

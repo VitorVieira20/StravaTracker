@@ -27,7 +27,7 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
 
             const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
 
-            if (Math.abs(delta) < 20) return;
+            if (Math.abs(delta) < 50) return;
 
             isScrollingRef.current = true;
 
@@ -81,7 +81,7 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
 
             <DashboardSideContent raceGoal={raceGoal} stravaData={stravaData} />
 
-            <DashboardMainContent stravaData={stravaData} weeklyHistory={weeklyHistory} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
+            <DashboardMainContent stravaData={stravaData} weeklyHistory={weeklyHistory} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} isScrollingRef={isScrollingRef} totalSlides={totalSlides} />
         </div >
     );
 }

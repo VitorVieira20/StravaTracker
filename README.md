@@ -114,7 +114,7 @@ This source code is made available for technical competency demonstration and po
 
 ## 🔒 Copyright and License
 
-**© 2024-2026 Vítor Vieira. All rights reserved.**
+**© 2025-2026 Vitor Vieira. All rights reserved.**
 
 This project is proprietary software. The source code is publicly available solely for educational and personal portfolio purposes.
 

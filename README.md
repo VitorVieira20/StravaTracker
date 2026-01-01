@@ -57,7 +57,7 @@ Unlike deep technical analysis apps (like TrainingPeaks), Run Tracker focuses on
 
 The platform was built with a focus on performance, scalability, and modern UX.
 
-* **Backend:** Laravel 1 (PHP) with Queues for asynchronous processing.
+* **Backend:** Laravel 12 (PHP) with Queues for asynchronous processing.
 * **Frontend:** React.js rendered via Inertia.js.
 * **Database:** MySQL.
 * **Design:** Tailwind CSS (Native Dark Mode).

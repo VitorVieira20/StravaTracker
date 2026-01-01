@@ -126,5 +126,5 @@ For inquiries regarding commercial licensing or partnerships, please contact via
 
 ---
 <p align="center">
-  Made with ❤️ and 🏃 by <a href="https://vitorvieiradev.com">Vítor Vieira</a>
+  Made by <a href="https://vitorvieiradev.com">Vítor Vieira</a>
 </p>

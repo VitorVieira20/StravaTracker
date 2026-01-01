@@ -29,13 +29,15 @@ class StravaAuthController extends Controller
     }
 
 
-    public function callback()
+    public function callback(Request $request)
     {
         try {
             $stravaUser = Socialite::driver('strava')->user();
         } catch (Exception $e) {
             return redirect('/')->with('error', 'Erro ao conectar com o Strava.');
         }
+
+        $preferredLocale = $request->getPreferredLanguage(['pt', 'en', 'es', 'it', 'fr']);
 
         $existingAccount = StravaAccount::where('strava_id', $stravaUser->id)->first();
 
@@ -47,6 +49,10 @@ class StravaAuthController extends Controller
                 'avatar' => $stravaUser->avatar,
             ]);
 
+            $existingAccount->user->update([
+                'locale' => $preferredLocale
+            ]);
+
             Auth::login($existingAccount->user);
 
         } else {
@@ -54,6 +60,7 @@ class StravaAuthController extends Controller
                 'name' => $stravaUser->nickname ?? $stravaUser->name,
                 'email' => $stravaUser->email ?? "athlete_{$stravaUser->id}@strava.placeholder",
                 'password' => Hash::make(Str::random(24)),
+                'locale' => $preferredLocale,
             ]);
 
             StravaAccount::create([

@@ -1,6 +1,8 @@
 import { Head, useForm } from '@inertiajs/react';
+import useTranslation from '@/Hooks/useTranslation';
 
 export default function SetGoal({ goal }) {
+    const { t } = useTranslation();
     const isEditing = !!goal;
 
     const { data, setData, post, put, processing, errors } = useForm({
@@ -23,45 +25,45 @@ export default function SetGoal({ goal }) {
 
     return (
         <div className="min-h-screen bg-[#18181b] flex flex-col items-center justify-center p-4 text-white font-sans">
-            <Head title="Definir Objetivo" />
+            <Head title={t('goal_head_title')} />
 
             <div className="w-full max-w-2xl">
                 <div className="mb-8 text-center">
                     <h1 className="text-3xl font-black mb-2">
-                        {isEditing ? 'Ajustar Detalhes' : 'Qual é o teu próximo desafio?'}
+                        {isEditing ? t('goal_edit_title') : t('goal_create_title')}
                     </h1>
                     <p className="text-gray-400">
-                        {isEditing ? 'Atualiza as tuas metas e datas.' : 'Define o teu alvo para personalizarmos o dashboard.'}
+                        {isEditing ? t('goal_edit_desc') : t('goal_create_desc')}
                     </p>
                 </div>
 
                 <form onSubmit={submit} className="bg-[#27272a] p-8 rounded-3xl border border-gray-800 shadow-2xl space-y-6">
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Nome da Corrida / Objetivo</label>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">{t('lbl_name')}</label>
                         <input
                             type="text"
                             value={data.name}
                             onChange={e => setData('name', e.target.value)}
-                            placeholder="Ex: Meia Maratona de Lisboa"
+                            placeholder={t('ph_name')}
                             className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0"
                         />
                         {errors.name && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Localização</label>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">{t('lbl_location')}</label>
                         <input
                             type="text"
                             value={data.location}
                             onChange={e => setData('location', e.target.value)}
-                            placeholder="Ex: Lisboa, Portugal"
+                            placeholder={t('ph_location')}
                             className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0"
                         />
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">Distância da Prova (km)</label>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-2">{t('lbl_distance')}</label>
 
                         <div className="flex items-center gap-4">
                             <input
@@ -79,7 +81,7 @@ export default function SetGoal({ goal }) {
 
                     <div className="grid grid-cols-2 gap-4">
                         <div>
-                            <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Dia da Prova</label>
+                            <label className="block text-xs font-bold uppercase text-gray-500 mb-1">{t('lbl_race_date')}</label>
                             <input
                                 type="date"
                                 value={data.race_date}
@@ -90,19 +92,19 @@ export default function SetGoal({ goal }) {
                         </div>
 
                         <div>
-                            <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Início do Treino</label>
+                            <label className="block text-xs font-bold uppercase text-gray-500 mb-1">{t('lbl_start_date')}</label>
                             <input
                                 type="date"
                                 value={data.start_date}
                                 onChange={e => setData('start_date', e.target.value)}
                                 className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0"
                             />
-                            <p className="text-[10px] text-gray-500 mt-1">Carregar dados a partir de...</p>
+                            <p className="text-[10px] text-gray-500 mt-1">{t('help_start_date')}</p>
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">Objetivo Semanal (km)</label>
+                        <label className="block text-xs font-bold uppercase text-gray-500 mb-1">{t('lbl_weekly_goal')}</label>
                         <div className="flex items-center gap-4">
                             <input
                                 type="range"
@@ -121,12 +123,12 @@ export default function SetGoal({ goal }) {
                         className={`w-full font-bold py-4 rounded-xl transition-all transform flex items-center justify-center mt-4 cursor-pointer
                             ${processing ? 'bg-orange-400 cursor-not-allowed opacity-80' : 'bg-[#FC4C02] hover:bg-[#e34402] hover:scale-[1.02] text-white'}`}
                     >
-                        {processing ? 'A guardar...' : (isEditing ? 'Atualizar Objetivo' : 'Criar Dashboard')}
+                        {processing ? t('btn_saving') : (isEditing ? t('btn_update') : t('btn_create'))}
                     </button>
 
                     {isEditing && (
                         <a href={route('dashboard.index')} className="block text-center text-gray-500 text-md hover:text-white transition-colors">
-                            Cancelar
+                            {t('btn_cancel')}
                         </a>
                     )}
                 </form>

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Services\RaceGoalService;
 use App\Services\StravaService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;

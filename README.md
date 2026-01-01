@@ -66,6 +66,25 @@ The platform was built with a focus on performance, scalability, and modern UX.
 
 ---
 
+## 📸 Screenshots
+
+Here are the three main Dashboard modes:
+
+<div align="center">
+  <h3>1. Volume & Evolution (TV Mode)</h3>
+  <img src="screenshots/slide_volume.png" alt="Volume Slide" width="800" style="border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+  <br><br>
+
+  <h3>2. Last Run Spotlight</h3>
+  <img src="screenshots/slide_last_run.png" alt="Last Run Slide" width="800" style="border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+  <br><br>
+
+  <h3>3. Consistency History (Heatmap)</h3>
+  <img src="screenshots/slide_history.png" alt="History Slide" width="800" style="border-radius: 15px; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);">
+</div>
+
+---
+
 ## ⚙️ Installation (For Technical Review Only)
 
 This source code is made available for technical competency demonstration and portfolio purposes.

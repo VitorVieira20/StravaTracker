@@ -1,59 +1,111 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
-
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  <img src="public/logo.png" alt="Run Tracker Logo" width="150">
 </p>
 
-## About Laravel
+<h1 align="center">Run Tracker</h1>
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+<p align="center">
+  A Smart Running Dashboard designed for "TV Mode", focused on goal tracking and performance prediction.
+</p>
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+<p align="center">
+  <a href="https://runtracker.vitorvieiradev.com"><strong>🌐 View Live Demo (runtracker.vitorvieiradev.com)</strong></a>
+</p>
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+<p align="center">
+  <img src="https://img.shields.io/badge/Strava_API-Under_Review-orange" alt="Strava Status">
+  <img src="https://img.shields.io/badge/Status-Private_Beta-blue" alt="Status">
+  <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License">
+</p>
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🚧 Project Status: Private Beta
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Run Tracker** is a platform currently under active development, created to fill a gap in running data visualization for performance-focused athletes.
 
-## Laravel Sponsors
+* **Current Phase:** The project is in **Closed Beta**. Access is currently restricted due to Strava API rate limits while we await official application verification.
+* **Roadmap:** The goal is to evolve the platform into a **SaaS (Software as a Service)** model, allowing multiple athletes to track their goals in real-time.
+* **Integration:** Fully integrated with Strava API v3 (activity synchronization, token management, and webhooks).
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## 🏃 What is Run Tracker?
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Run Tracker transforms raw Strava data into a "Big Screen" visual experience. Designed to run on TVs or secondary monitors, it acts as a **"hands-off" motivation hub**, automatically cycling through crucial metrics without requiring user interaction.
 
-## Contributing
+Unlike deep technical analysis apps (like TrainingPeaks), Run Tracker focuses on **progress visualization and goal gamification**.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## ✨ Key Features
 
-## Code of Conduct
+### 📺 TV Dashboard (Auto Carousel)
+* **Slide 1 - Volume Evolution:** Dynamic area chart showing training volume over the last 4 weeks.
+* **Slide 2 - Last Run Spotlight:** High-impact visualization with Pace, Time, Distance, and **Watts** (Power) metrics.
+* **Slide 3 - Annual Consistency:** GitHub-style heat grid to visualize training frequency throughout the year.
+* **Interactivity:** The carousel runs automatically but supports navigation via scroll (desktop) or swipe (mobile).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 🤖 Smart Race Predictor
+* **Adaptive Algorithm:** Uses the Riegel Formula based on GAP (Grade Adjusted Pace) to estimate race times.
+* **Smart Filtering:** Automatically ignores recovery runs and warm-ups, focusing only on recent "Best Efforts" to generate realistic predictions.
 
-## Security Vulnerabilities
+### 🎯 Goal Management
+* **Race Countdown:** Dynamic countdown to the target race day.
+* **Weekly Tracker:** Real-time progress bar (Km run vs. Weekly Goal).
+* **Multi-Distance Support:** Adjusted predictions for Marathon, Half-Marathon, 10k, etc.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 🛠️ Tech Stack
 
-## License
+The platform was built with a focus on performance, scalability, and modern UX.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+* **Backend:** Laravel 12 (PHP) with Queues for asynchronous processing.
+* **Frontend:** React.js rendered via Inertia.js.
+* **Database:** MySQL.
+* **Design:** Tailwind CSS (Native Dark Mode).
+* **Charts:** Recharts.
+* **Integrations:** Strava API, Discord Webhooks (Support/Ticket System).
+
+---
+
+## ⚙️ Installation (For Technical Review Only)
+
+This source code is made available for technical competency demonstration and portfolio purposes.
+
+1.  **Clone the repository**
+    ```bash
+    git clone [https://github.com/VitorVieira20/StravaTracker.git](https://github.com/VitorVieira20/StravaTracker.git)
+    ```
+2.  **Install dependencies**
+    ```bash
+    composer install && npm install
+    ```
+3.  **Configure Environment Variables (.env)**
+    ```env
+    STRAVA_CLIENT_ID=your_id
+    STRAVA_CLIENT_SECRET=your_secret
+    DISCORD_SUPPORT_WEBHOOK_URL=your_webhook
+    ```
+4.  **Run**
+    ```bash
+    php artisan serve
+    npm run dev
+    php artisan queue:work
+    ```
+
+---
+
+## 🔒 Copyright and License
+
+**© 2024-2026 Vítor Vieira. All rights reserved.**
+
+This project is proprietary software. The source code is publicly available solely for educational and personal portfolio purposes.
+
+* 🚫 **Prohibited:** Copying, redistributing, selling, or using this code to create a competing or commercial service.
+* 🚫 **Prohibited:** Hosting this code publicly as a SaaS service without express permission from the author.
+* ✅ **Permitted:** Studying the code for learning or technical reference.
+
+For inquiries regarding commercial licensing or partnerships, please contact via the official website.
+
+---
+<p align="center">
+  Made by <a href="https://vitorvieiradev.com">Vitor Vieira</a>
+</p>

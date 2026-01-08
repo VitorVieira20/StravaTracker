@@ -6,6 +6,7 @@ use App\Models\RaceGoal;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -114,7 +115,7 @@ class StravaService
                     'moving_time_seconds' => $movingTimeSeconds,
                     'time_formatted' => gmdate("H:i:s", $movingTimeSeconds),
                     'pace_formatted' => gmdate("i:s", $paceSeconds),
-                    'raw_date' => Carbon::parse($activity['start_date_local']),
+                    'raw_date_utc' => Carbon::parse($activity['start_date'], 'UTC'),
                     'pace_seconds' => $paceSeconds,
                     'watts' => $watts
                 ];
@@ -125,30 +126,46 @@ class StravaService
 
     public function getWeeklyHistory(Collection $runs)
     {
-        return $runs->groupBy(function ($run) {
-            return $run['raw_date']->startOfWeek()->format('Y-m-d');
-        })->map(function ($weekRuns, $weekStartDate) {
-            $start = Carbon::parse($weekStartDate);
-            $end = $start->copy()->endOfWeek();
+        return $runs
+            ->groupBy(function ($run) {
+                return $run['raw_date_utc']
+                    ->copy()
+                    ->startOfWeek(Carbon::MONDAY)
+                    ->format('Y-m-d');
+            })
+            ->map(function ($weekRuns, $weekStartDate) {
 
-            return [
-                'week_label' => $start->format('d M') . ' - ' . $end->format('d M'),
-                'total_distance' => round($weekRuns->sum('distance_km'), 1),
-                'total_time' => floor($weekRuns->sum('moving_time_seconds') / 3600) . 'h ' . gmdate("i", $weekRuns->sum('moving_time_seconds')) . 'm',
-                'activity_count' => $weekRuns->count(),
-                'activities' => $weekRuns->map(function ($run) {
-                    return [
-                        'id' => $run['id'],
-                        'name' => $run['name'],
-                        'date_human' => $run['raw_date']->locale('pt')->isoFormat('dddd, D MMM'),
-                        'distance_km' => $run['distance_km'],
-                        'pace' => $run['pace_formatted'],
-                        'time_formatted' => $run['time_formatted']
-                    ];
-                })->sortByDesc('raw_date')->values()
-            ];
-        })->sortKeysDesc()->values();
+                $startUtc = Carbon::parse($weekStartDate, 'UTC');
+                $endUtc = $startUtc->copy()->endOfWeek(Carbon::MONDAY);
+
+                return [
+                    'week_label' => $startUtc->format('d M') . ' - ' . $endUtc->format('d M'),
+                    'total_distance' => round($weekRuns->sum('distance_km'), 1),
+                    'total_time' => floor($weekRuns->sum('moving_time_seconds') / 3600)
+                        . 'h ' . gmdate("i", $weekRuns->sum('moving_time_seconds')) . 'm',
+                    'activity_count' => $weekRuns->count(),
+                    'activities' => $weekRuns
+                        ->sortByDesc(fn($run) => $run['raw_date_utc'])
+                        ->map(function ($run) {
+                            return [
+                                'id' => $run['id'],
+                                'name' => $run['name'],
+                                'date_human' => $run['raw_date_utc']
+                                    ->copy()
+                                    ->locale('pt')
+                                    ->isoFormat('dddd, D MMM'),
+                                'distance_km' => $run['distance_km'],
+                                'pace' => $run['pace_formatted'],
+                                'time_formatted' => $run['time_formatted'],
+                            ];
+                        })
+                        ->values(),
+                ];
+            })
+            ->sortKeysDesc()
+            ->values();
     }
+
 
 
     public function formatStravaData(RaceGoal $goal, $forceRefresh)
@@ -162,8 +179,13 @@ class StravaService
 
         $weeklyHistory = $this->getWeeklyHistory($runs);
 
-        $currentWeekStart = Carbon::now()->startOfWeek();
-        $currentWeekDistance = $runs->where('raw_date', '>=', $currentWeekStart)->sum('distance_km');
+        $currentWeekStart = Carbon::now('UTC')->startOfWeek(Carbon::MONDAY);
+
+        $currentWeekDistance = $runs
+            ->where('raw_date_utc', '>=', $currentWeekStart)
+            ->sum('distance_km');
+
+        $userTimezone = Auth::user()->timezone ?? 'UTC';
 
         $last4Runs = $runs->slice(-4, 4)->reverse();
 
@@ -188,11 +210,11 @@ class StravaService
                 'recentAvgPace' => gmdate("i:s", $avgPaceSeconds),
                 'racePrediction' => $prediction,
                 'chartData' => $chartData,
-                'activities' => $runs->slice(-5, 5)->reverse()->map(function ($run) {
+                'activities' => $runs->slice(-5, 5)->reverse()->map(function ($run, $userTimezone) {
                     return [
                         'id' => $run['id'],
                         'name' => $run['name'],
-                        'date' => $run['raw_date']->diffForHumans(),
+                        'date_utc' => $run['raw_date_utc']->toIso8601String(),
                         'distance' => $run['distance_km'],
                         'pace' => $run['pace_formatted'],
                         'time' => $run['time_formatted'],

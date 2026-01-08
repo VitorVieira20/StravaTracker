@@ -17,6 +17,7 @@
     "dependencies": {
         "@inertiajs/react": "^2.3.4",
         "@vitejs/plugin-react": "^5.1.2",
+        "dayjs": "^1.11.19",
         "lucide-react": "^0.562.0",
         "recharts": "^3.6.0",
         "tailwindcss-animate": "^1.0.7",

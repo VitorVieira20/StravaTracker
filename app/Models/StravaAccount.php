@@ -17,6 +17,11 @@ class StravaAccount extends Model
         'username'
     ];
 
+    protected $casts = [
+        'access_token' => 'encrypted',
+        'refresh_token' => 'encrypted',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

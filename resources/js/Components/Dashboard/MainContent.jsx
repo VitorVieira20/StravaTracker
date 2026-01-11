@@ -1,19 +1,8 @@
-import { useEffect, useState } from "react";
 import ChartSlide from "./Slides/Chart";
 import LastRunSlide from "./Slides/LastRun";
 import WeeklyGridSlide from "./Slides/WeeklyGrid";
 
-const SLIDE_DURATION = 15000;
-
-export default function DashboardMainContent({ stravaData, weeklyHistory, currentSlide, setCurrentSlide, isScrollingRef, totalSlides }) {    
-    useEffect(() => {
-        const timer = setInterval(() => {
-            if (!isScrollingRef.current) {
-                setCurrentSlide((prev) => (prev + 1) % totalSlides);
-            }
-        }, SLIDE_DURATION);
-        return () => clearInterval(timer);
-    }, []);
+export default function DashboardMainContent({ stravaData, weeklyHistory, currentSlide, setCurrentSlide }) {    
 
     return (
         <main className="w-full lg:w-[70%] h-auto lg:h-screen relative bg-[#18181b] p-4 lg:p-12 lg:px-8 flex flex-col justify-start lg:justify-center z-10">

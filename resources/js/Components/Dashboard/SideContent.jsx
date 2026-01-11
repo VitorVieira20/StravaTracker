@@ -1,10 +1,10 @@
 import { Link, router, usePage } from "@inertiajs/react";
-import { Calendar, LifeBuoy, LogOut, MapPin, RefreshCw, Settings, Trophy, Route, Zap, Timer, Globe } from "lucide-react";
+import { Calendar, LifeBuoy, LogOut, MapPin, RefreshCw, Settings, Trophy, Route, Zap, Timer, Globe, Tv } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import useTranslation from '@/Hooks/useTranslation';
 import { route } from "ziggy-js";
 
-export default function DashboardSideContent({ raceGoal, stravaData }) {
+export default function DashboardSideContent({ raceGoal, stravaData, isTvMode, setIsTvMode }) {
     const { t } = useTranslation();
     const { locale } = usePage().props;
     const [isSyncing, setIsSyncing] = useState(false);
@@ -106,6 +106,10 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                                 </div>
                             )}
                         </div>
+                        
+                        <button onClick={() => setIsTvMode(!isTvMode)} className={`p-2 rounded-full transition-all hover:bg-gray-800 ${isTvMode ? 'text-[#FC4C02]' : 'text-gray-400'} cursor-pointer`} title={t('tip_tv_mode')}>
+                            <Tv size={20} />
+                        </button>
 
                         <Link href={route('support.create')} className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer" title={t('tip_support')}>
                             <LifeBuoy size={20} />

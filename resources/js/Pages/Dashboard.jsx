@@ -7,19 +7,23 @@ const SLIDE_DURATION = 15000;
 
 export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
     const [currentSlide, setCurrentSlide] = useState(0);
+    const [isTvMode, setIsTvMode] = useState(true);
     const totalSlides = 3;
 
     const isScrollingRef = useRef(false);
     const touchStartX = useRef(0);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            if (!isScrollingRef.current) {
-                setCurrentSlide((prev) => (prev + 1) % totalSlides);
-            }
-        }, SLIDE_DURATION);
+        let timer;
+        if (isTvMode) {
+            timer = setInterval(() => {
+                if (!isScrollingRef.current) {
+                    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+                }
+            }, SLIDE_DURATION);
+        }
         return () => clearInterval(timer);
-    }, []);
+    }, [isTvMode]);
 
     useEffect(() => {
         const handleWheel = (e) => {
@@ -79,9 +83,9 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
         >
             <Head title="TV Dashboard" />
 
-            <DashboardSideContent raceGoal={raceGoal} stravaData={stravaData} />
+            <DashboardSideContent raceGoal={raceGoal} stravaData={stravaData} isTvMode={isTvMode} setIsTvMode={setIsTvMode} />
 
-            <DashboardMainContent stravaData={stravaData} weeklyHistory={weeklyHistory} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} isScrollingRef={isScrollingRef} totalSlides={totalSlides} />
+            <DashboardMainContent stravaData={stravaData} weeklyHistory={weeklyHistory} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
         </div >
     );
 }

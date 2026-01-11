@@ -27,10 +27,14 @@ class DashboardController extends Controller
         $stravaService = new StravaService($user->stravaAccount);
         $raceGoalService = new RaceGoalService();
 
-        $forceRefresh = $request->has('refresh');
+        $shouldSync = $request->has('refresh') || !$request->session()->get('strava_synced', false);
 
-        $stravaData = $stravaService->formatStravaData($goal, $forceRefresh);
+        $stravaData = $stravaService->formatStravaData($goal, $shouldSync);
         $raceGoalData = $raceGoalService->formatRaceGoalData($goal);
+        
+        if ($shouldSync) {
+            $request->session()->put('strava_synced', true);
+        }
 
         return Inertia::render('Dashboard', [
             'raceGoal' => $raceGoalData,

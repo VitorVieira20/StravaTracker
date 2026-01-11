@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
+use App\Models\Activity;
 use App\Models\RaceGoal;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class StravaService
@@ -18,7 +18,6 @@ class StravaService
     {
         $this->account = $account;
     }
-
 
     protected function ensureValidToken()
     {
@@ -32,7 +31,7 @@ class StravaService
                 ]);
 
                 if ($response->failed()) {
-                    throw new Exception('Falha ao renovar token');
+                    throw new Exception('Failed to renew token');
                 }
 
                 $data = $response->json();
@@ -44,119 +43,94 @@ class StravaService
                 ]);
             } catch (Exception $e) {
                 $this->account->delete();
-                throw new Exception('A conexão com o Strava expirou. Por favor reconecte.');
+                throw new Exception('Strava connection expired. Please reconnect.');
             }
         }
 
         return $this->account->access_token;
     }
 
-
-    public function getRecentActivities($startDate, $forceRefresh = false)
+    public function syncActivities()
     {
-        $userId = $this->account->user_id;
-        $cacheKey = "strava_activities_{$userId}";
+        $token = $this->ensureValidToken();
+        $page = 1;
+        $perPage = 200;
 
-        if ($forceRefresh) {
-            Cache::forget($cacheKey);
-        }
+        $lastActivityDate = Activity::where('user_id', $this->account->user_id)
+            ->latest('start_date_local')
+            ->value('start_date_local');
+        
+        $after = $lastActivityDate ? Carbon::parse($lastActivityDate)->timestamp : null;
 
-        return Cache::remember($cacheKey, 3600, function () use ($startDate) {
+        do {
+            $response = Http::withToken($token)
+                ->get('https://www.strava.com/api/v3/athlete/activities', [
+                    'per_page' => $perPage,
+                    'page' => $page,
+                    'after' => $after,
+                ]);
 
-            $token = $this->ensureValidToken();
-            $allActivities = [];
-            $page = 1;
-            $perPage = 200;
+            if ($response->failed()) {
+                throw new Exception('Strava Error: ' . $response->body());
+            }
 
-            do {
-                $response = Http::withToken($token)
-                    ->get('https://www.strava.com/api/v3/athlete/activities', [
-                        'per_page' => $perPage,
-                        'page' => $page,
-                        'after' => $startDate
-                    ]);
+            $activities = $response->json();
 
-                if ($response->failed()) {
-                    throw new Exception('Erro Strava: ' . $response->body());
-                }
+            foreach ($activities as $activityData) {
+                Activity::updateOrCreate(
+                    [
+                        'strava_id' => $activityData['id'],
+                        'user_id' => $this->account->user_id,
+                    ],
+                    [
+                        'name' => $activityData['name'],
+                        'type' => $activityData['type'],
+                        'start_date_local' => Carbon::parse($activityData['start_date_local']),
+                        'timezone' => $activityData['timezone'],
+                        'distance' => $activityData['distance'],
+                        'moving_time' => $activityData['moving_time'],
+                        'elapsed_time' => $activityData['elapsed_time'],
+                        'total_elevation_gain' => $activityData['total_elevation_gain'],
+                        'average_speed' => $activityData['average_speed'],
+                        'max_speed' => $activityData['max_speed'],
+                        'average_grade_adjusted_speed' => $activityData['average_grade_adjusted_speed'] ?? null,
+                        'average_watts' => $activityData['average_watts'] ?? null,
+                        'average_heartrate' => $activityData['average_heartrate'] ?? null,
+                        'map_polyline' => $activityData['map']['summary_polyline'] ?? null,
+                    ]
+                );
+            }
 
-                $activities = $response->json();
-                $allActivities = array_merge($allActivities, $activities);
-                $page++;
+            $page++;
 
-            } while (count($activities) === $perPage);
-
-            return $allActivities;
-        });
+        } while (count($activities) === $perPage);
     }
-
-
-    public function filterActivitiesByRun(array $rawActivities): Collection
-    {
-        return collect($rawActivities)
-            ->filter(function ($activity) {
-                return $activity['type'] === 'Run';
-            })
-            ->map(function ($activity) {
-                $distanceKm = $activity['distance'] / 1000;
-                $movingTimeSeconds = $activity['moving_time'];
-
-                $speedMetersPerSecond = $activity['average_grade_adjusted_speed'] ?? $activity['average_speed'] ?? 0;
-
-                $paceSeconds = $speedMetersPerSecond > 0 ? (1000 / $speedMetersPerSecond) : 0;
-
-                $watts = $activity['average_watts'] ?? 0;
-
-                return [
-                    'id' => $activity['id'],
-                    'name' => $activity['name'],
-                    'start_date_local' => $activity['start_date_local'],
-                    'distance_km' => round($distanceKm, 2),
-                    'moving_time_seconds' => $movingTimeSeconds,
-                    'time_formatted' => gmdate("H:i:s", $movingTimeSeconds),
-                    'pace_formatted' => gmdate("i:s", $paceSeconds),
-                    'raw_date_utc' => Carbon::parse($activity['start_date'], 'UTC'),
-                    'pace_seconds' => $paceSeconds,
-                    'watts' => $watts
-                ];
-            })
-            ->values();
-    }
-
 
     public function getWeeklyHistory(Collection $runs)
     {
         return $runs
             ->groupBy(function ($run) {
-                return $run['raw_date_utc']
-                    ->copy()
-                    ->startOfWeek(Carbon::MONDAY)
-                    ->format('Y-m-d');
+                return $run->start_date_local->copy()->startOfWeek(Carbon::MONDAY)->format('Y-m-d');
             })
             ->map(function ($weekRuns, $weekStartDate) {
-
                 $startUtc = Carbon::parse($weekStartDate, 'UTC');
                 $endUtc = $startUtc->copy()->endOfWeek(Carbon::MONDAY);
 
                 return [
                     'week_label' => $startUtc->format('d M') . ' - ' . $endUtc->format('d M'),
                     'total_distance' => round($weekRuns->sum('distance_km'), 1),
-                    'total_time' => floor($weekRuns->sum('moving_time_seconds') / 3600)
-                        . 'h ' . gmdate("i", $weekRuns->sum('moving_time_seconds')) . 'm',
+                    'total_time' => floor($weekRuns->sum('moving_time') / 3600) . 'h ' . gmdate("i", $weekRuns->sum('moving_time')) . 'm',
                     'activity_count' => $weekRuns->count(),
                     'activities' => $weekRuns
-                        ->sortByDesc(fn($run) => $run['raw_date_utc'])
+                        ->sortByDesc('start_date_local')
                         ->map(function ($run) {
                             return [
-                                'id' => $run['id'],
-                                'name' => $run['name'],
-                                'date_human' => $run['raw_date_utc']
-                                    ->copy()
-                                    ->locale('pt')
-                                    ->isoFormat('dddd, D MMM'),
-                                'distance_km' => $run['distance_km'],
-                                'pace' => $run['pace_formatted'],
-                                'time_formatted' => $run['time_formatted'],
+                                'id' => $run->id,
+                                'name' => $run->name,
+                                'date_human' => $run->start_date_local->locale(app()->getLocale())->isoFormat('dddd, D MMM'),
+                                'distance_km' => $run->distance_km,
+                                'pace' => $run->pace_formatted,
+                                'time_formatted' => $run->time_formatted,
                             ];
                         })
                         ->values(),
@@ -166,34 +140,35 @@ class StravaService
             ->values();
     }
 
-
-
-    public function formatStravaData(RaceGoal $goal, $forceRefresh)
+    public function formatStravaData(RaceGoal $goal, $shouldSync)
     {
-        $rawActivities = $this->getRecentActivities(
-            $goal->start_date->timestamp,
-            $forceRefresh
-        );
+        if ($shouldSync) {
+            $this->syncActivities();
+        }
 
-        $runs = $this->filterActivitiesByRun($rawActivities);
+        $runs = Activity::where('user_id', $this->account->user_id)
+            ->where('type', 'Run')
+            ->where('start_date_local', '>=', $goal->start_date)
+            ->orderBy('start_date_local', 'asc')
+            ->get();
 
         $weeklyHistory = $this->getWeeklyHistory($runs);
 
         $currentWeekStart = Carbon::now('UTC')->startOfWeek(Carbon::MONDAY);
-
         $currentWeekDistance = $runs
-            ->where('raw_date_utc', '>=', $currentWeekStart)
+            ->where('start_date_local', '>=', $currentWeekStart)
             ->sum('distance_km');
 
-        $userTimezone = Auth::user()->timezone ?? 'UTC';
-
-        $last4Runs = $runs->slice(-4, 4)->reverse();
-
+        $last4Runs = $runs->slice(-4);
         $avgPaceSeconds = 0;
         if ($last4Runs->sum('distance_km') > 0) {
-            $avgPaceSeconds = $last4Runs->sum('moving_time_seconds') / $last4Runs->sum('distance_km');
+            $totalTime = $last4Runs->sum('moving_time');
+            $totalDistance = $last4Runs->sum('distance_km');
+            if ($totalDistance > 0) {
+                $avgPaceSeconds = $totalTime / $totalDistance;
+            }
         }
-
+        
         $chartData = $weeklyHistory->take(4)->reverse()->map(function ($week) {
             return [
                 'name' => substr($week['week_label'], 0, 6),
@@ -210,15 +185,15 @@ class StravaService
                 'recentAvgPace' => gmdate("i:s", $avgPaceSeconds),
                 'racePrediction' => $prediction,
                 'chartData' => $chartData,
-                'activities' => $runs->slice(-5, 5)->reverse()->map(function ($run, $userTimezone) {
+                'activities' => $runs->slice(-5)->reverse()->map(function ($run) {
                     return [
-                        'id' => $run['id'],
-                        'name' => $run['name'],
-                        'date_utc' => $run['raw_date_utc']->toIso8601String(),
-                        'distance' => $run['distance_km'],
-                        'pace' => $run['pace_formatted'],
-                        'time' => $run['time_formatted'],
-                        'watts' => $run['watts']
+                        'id' => $run->id,
+                        'name' => $run->name,
+                        'date_utc' => $run->start_date_local->toIso8601String(),
+                        'distance' => $run->distance_km,
+                        'pace' => $run->pace_formatted,
+                        'time' => $run->time_formatted,
+                        'watts' => $run->average_watts
                     ];
                 })->values()
             ],
@@ -226,11 +201,9 @@ class StravaService
         ];
     }
 
-
-    public function predictRaceTime($recentRuns, $targetDistanceKm)
+    public function predictRaceTime(Collection $recentRuns, $targetDistanceKm)
     {
         $minDistance = 3;
-
         if ($targetDistanceKm <= 1) {
             $minDistance = 0.05;
         } elseif ($targetDistanceKm <= 5) {
@@ -238,7 +211,7 @@ class StravaService
         }
 
         $relevantRuns = $recentRuns->filter(function ($run) use ($minDistance) {
-            return $run['distance_km'] >= $minDistance;
+            return $run->distance_km >= $minDistance;
         });
 
         if ($relevantRuns->isEmpty()) {
@@ -246,17 +219,20 @@ class StravaService
         }
 
         $bestRun = $relevantRuns->sortBy(function ($run) {
-            return $run['pace_seconds'];
+             $speed = $run->average_grade_adjusted_speed ?? $run->average_speed;
+             return $speed > 0 ? (1 / $speed) : INF;
         })->first();
 
-        $d1 = $bestRun['distance_km'];
-        $t1_seconds = $bestRun['moving_time_seconds'];
+        $d1 = $bestRun->distance_km;
+        $t1_seconds = $bestRun->moving_time;
+
+        if ($d1 <= 0) return null;
 
         $predictedSeconds = $t1_seconds * pow(($targetDistanceKm / $d1), 1.06);
 
         return [
             'time_formatted' => gmdate("H:i:s", $predictedSeconds),
-            'base_run_name' => $bestRun['name'],
+            'base_run_name' => $bestRun->name,
             'predicted_pace' => gmdate("i:s", $predictedSeconds / $targetDistanceKm)
         ];
     }

@@ -53,29 +53,30 @@ class StravaAuthController extends Controller
                 'locale' => $preferredLocale
             ]);
 
-            Auth::login($existingAccount->user);
-
-        } else {
-            $newUser = User::create([
-                'name' => $stravaUser->nickname ?? $stravaUser->name,
-                'email' => $stravaUser->email ?? "athlete_{$stravaUser->id}@strava.placeholder",
-                'password' => Hash::make(Str::random(24)),
-                'locale' => $preferredLocale,
-            ]);
-
-            StravaAccount::create([
-                'user_id' => $newUser->id,
-                'strava_id' => $stravaUser->id,
-                'access_token' => $stravaUser->token,
-                'refresh_token' => $stravaUser->refreshToken,
-                'expires_at' => Carbon::now()->addSeconds($stravaUser->expiresIn),
-                'username' => $stravaUser->nickname,
-                'avatar' => $stravaUser->avatar,
-            ]);
-
-            Auth::login($newUser);
-        }
-
+                    Auth::login($existingAccount->user);
+                    $request->session()->put('strava_synced', false);
+            
+                } else {
+                    $newUser = User::create([
+                        'name' => $stravaUser->nickname ?? $stravaUser->name,
+                        'email' => $stravaUser->email ?? "athlete_{$stravaUser->id}@strava.placeholder",
+                        'password' => Hash::make(Str::random(24)),
+                        'locale' => $preferredLocale,
+                    ]);
+            
+                    StravaAccount::create([
+                        'user_id' => $newUser->id,
+                        'strava_id' => $stravaUser->id,
+                        'access_token' => $stravaUser->token,
+                        'refresh_token' => $stravaUser->refreshToken,
+                        'expires_at' => Carbon::now()->addSeconds($stravaUser->expiresIn),
+                        'username' => $stravaUser->nickname,
+                        'avatar' => $stravaUser->avatar,
+                    ]);
+            
+                    Auth::login($newUser);
+                    $request->session()->put('strava_synced', false);
+                }
         return redirect()->route('dashboard.index');
     }
 

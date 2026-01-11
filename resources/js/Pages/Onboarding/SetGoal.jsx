@@ -79,14 +79,14 @@ export default function SetGoal({ goal }) {
                         {errors.race_distance && <div className="text-red-500 text-xs mt-1">{errors.race_distance}</div>}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-xs font-bold uppercase text-gray-500 mb-1">{t('lbl_race_date')}</label>
                             <input
                                 type="date"
                                 value={data.race_date}
                                 onChange={e => setData('race_date', e.target.value)}
-                                className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0"
+                                className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0 [&::-webkit-calendar-picker-indicator]:invert cursor-pointer"
                             />
                             {errors.race_date && <div className="text-red-500 text-xs mt-1">{errors.race_date}</div>}
                         </div>
@@ -97,7 +97,7 @@ export default function SetGoal({ goal }) {
                                 type="date"
                                 value={data.start_date}
                                 onChange={e => setData('start_date', e.target.value)}
-                                className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0"
+                                className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0 [&::-webkit-calendar-picker-indicator]:invert cursor-pointer"
                             />
                             <p className="text-[10px] text-gray-500 mt-1">{t('help_start_date')}</p>
                         </div>

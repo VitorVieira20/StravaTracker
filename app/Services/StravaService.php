@@ -59,7 +59,7 @@ class StravaService
         $lastActivityDate = Activity::where('user_id', $this->account->user_id)
             ->latest('start_date_local')
             ->value('start_date_local');
-        
+
         $after = $lastActivityDate ? Carbon::parse($lastActivityDate)->timestamp : null;
 
         do {
@@ -77,28 +77,30 @@ class StravaService
             $activities = $response->json();
 
             foreach ($activities as $activityData) {
-                Activity::updateOrCreate(
-                    [
-                        'strava_id' => $activityData['id'],
-                        'user_id' => $this->account->user_id,
-                    ],
-                    [
-                        'name' => $activityData['name'],
-                        'type' => $activityData['type'],
-                        'start_date_local' => Carbon::parse($activityData['start_date_local']),
-                        'timezone' => $activityData['timezone'],
-                        'distance' => $activityData['distance'],
-                        'moving_time' => $activityData['moving_time'],
-                        'elapsed_time' => $activityData['elapsed_time'],
-                        'total_elevation_gain' => $activityData['total_elevation_gain'],
-                        'average_speed' => $activityData['average_speed'],
-                        'max_speed' => $activityData['max_speed'],
-                        'average_grade_adjusted_speed' => $activityData['average_grade_adjusted_speed'] ?? null,
-                        'average_watts' => $activityData['average_watts'] ?? null,
-                        'average_heartrate' => $activityData['average_heartrate'] ?? null,
-                        'map_polyline' => $activityData['map']['summary_polyline'] ?? null,
-                    ]
-                );
+                if ($activityData['type'] === 'Run') {
+                    Activity::updateOrCreate(
+                        [
+                            'strava_id' => $activityData['id'],
+                            'user_id' => $this->account->user_id,
+                        ],
+                        [
+                            'name' => $activityData['name'],
+                            'type' => $activityData['type'],
+                            'start_date_local' => Carbon::parse($activityData['start_date_local']),
+                            'timezone' => $activityData['timezone'],
+                            'distance' => $activityData['distance'],
+                            'moving_time' => $activityData['moving_time'],
+                            'elapsed_time' => $activityData['elapsed_time'],
+                            'total_elevation_gain' => $activityData['total_elevation_gain'],
+                            'average_speed' => $activityData['average_speed'],
+                            'max_speed' => $activityData['max_speed'],
+                            'average_grade_adjusted_speed' => $activityData['average_grade_adjusted_speed'] ?? null,
+                            'average_watts' => $activityData['average_watts'] ?? null,
+                            'average_heartrate' => $activityData['average_heartrate'] ?? null,
+                            'map_polyline' => $activityData['map']['summary_polyline'] ?? null,
+                        ]
+                    );
+                }
             }
 
             $page++;
@@ -168,7 +170,7 @@ class StravaService
                 $avgPaceSeconds = $totalTime / $totalDistance;
             }
         }
-        
+
         $chartData = $weeklyHistory->take(4)->reverse()->map(function ($week) {
             return [
                 'name' => substr($week['week_label'], 0, 6),
@@ -219,14 +221,15 @@ class StravaService
         }
 
         $bestRun = $relevantRuns->sortBy(function ($run) {
-             $speed = $run->average_grade_adjusted_speed ?? $run->average_speed;
-             return $speed > 0 ? (1 / $speed) : INF;
+            $speed = $run->average_grade_adjusted_speed ?? $run->average_speed;
+            return $speed > 0 ? (1 / $speed) : INF;
         })->first();
 
         $d1 = $bestRun->distance_km;
         $t1_seconds = $bestRun->moving_time;
 
-        if ($d1 <= 0) return null;
+        if ($d1 <= 0)
+            return null;
 
         $predictedSeconds = $t1_seconds * pow(($targetDistanceKm / $d1), 1.06);
 

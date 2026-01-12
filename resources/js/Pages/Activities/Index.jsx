@@ -49,7 +49,7 @@ export default function ActivitiesIndex({ activities }) {
                     <div>
                         <h1 className="text-3xl font-bold">{t('act_title') || "Histórico de Treinos"}</h1>
                         <p className="text-gray-400 text-sm">
-                            {list.length} {t('act_subtitle') || "corridas sincronizadas."}
+                            {t('act_subtitle') || "corridas sincronizadas."}
                         </p>
                     </div>
                 </div>

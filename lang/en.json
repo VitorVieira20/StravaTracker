@@ -91,5 +91,22 @@
     "act_empty_desc": "Sync with Strava to see your workouts here.",
     "act_sync_btn": "Sync Now",
     "weekly_activities": "Weekly Activities",
-    "no_activities_this_week": "No activities recorded for this week."
+    "no_activities_this_week": "No activities recorded for this week.",
+    "personal_bests": "Personal Bests",
+    "average_pace": "Average Pace",
+    "based_on_activity": "Based on Activity",
+    "date": "Date",
+    "view_activity": "View Activity",
+    "personal_bests_subtitle": "Your running achievements and records at a glance.",
+    "tip_personal_bests": "Personal Records",
+    "dist_400m": "400m",
+    "dist_1km": "1km",
+    "dist_1mile": "1 Mile (1.6km)",
+    "dist_5km": "5km",
+    "dist_10km": "10km",
+    "dist_half_marathon": "Half Marathon (21k)",
+    "dist_marathon": "Marathon (42k)",
+    "dist_50km": "50km",
+    "dist_100km": "100km",
+    "dist_not_completed": "You haven't completed this distance yet."
 }

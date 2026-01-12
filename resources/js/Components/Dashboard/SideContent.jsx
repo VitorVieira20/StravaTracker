@@ -57,6 +57,14 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                         </Link>
 
                         <Link
+                            href={route('personal-bests.index')}
+                            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
+                            title={t('tip_personal_bests')}
+                        >
+                            <Trophy size={20} />
+                        </Link>
+
+                        <Link
                             href={route('settings.index')}
                             className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
                             title={t('tip_settings')}

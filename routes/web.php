@@ -3,6 +3,7 @@
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\PersonalBestsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RaceGoalController;
 use App\Http\Controllers\SettingsController;
@@ -31,10 +32,17 @@ Route::middleware('auth.redirect')->group(function () {
     // ACTIVITIES
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
 
+    
+    // PERSONAL BESTS
+    Route::get('/personal-bests', [PersonalBestsController::class, 'index'])->name('personal-bests.index');
+
 
     // SETTINGS
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
     Route::get('/settings/export', [SettingsController::class, 'export'])->name('settings.export');
+    Route::get('/debug-strava', [SettingsController::class, 'debugStrava'])->name('debug.strava');
+
+
 
 
     // PROFILE

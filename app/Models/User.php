@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -57,5 +58,11 @@ class User extends Authenticatable
     public function currentGoal()
     {
         return $this->hasOne(RaceGoal::class)->latestOfMany();
+    }
+
+
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
     }
 }

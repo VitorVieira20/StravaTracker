@@ -91,5 +91,22 @@
     "act_empty_desc": "Sincroniza com o Strava para veres os teus treinos aqui.",
     "act_sync_btn": "Sincronizar Agora",
     "weekly_activities": "Atividades da Semana",
-    "no_activities_this_week": "Nenhuma atividade registada para esta semana."
+    "no_activities_this_week": "Nenhuma atividade registada para esta semana.",
+    "personal_bests": "Recordes Pessoais",
+    "average_pace": "Ritmo Médio",
+    "based_on_activity": "Baseado na Atividade",
+    "date": "Data",
+    "view_activity": "Ver Atividade",
+    "personal_bests_subtitle": "As tuas conquistas e recordes de corrida num piscar de olhos.",
+    "tip_personal_bests": "Recordes Pessoais",
+    "dist_400m": "400m",
+    "dist_1km": "1km",
+    "dist_1mile": "1 Milha (1.6km)",
+    "dist_5km": "5km",
+    "dist_10km": "10km",
+    "dist_half_marathon": "Meia Maratona (21k)",
+    "dist_marathon": "Maratona (42k)",
+    "dist_50km": "50km",
+    "dist_100km": "100km",
+    "dist_not_completed": "Ainda não completaste esta distância."
 }

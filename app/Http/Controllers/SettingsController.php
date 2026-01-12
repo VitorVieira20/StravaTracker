@@ -7,6 +7,7 @@ use App\Services\RaceGoalService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class SettingsController extends Controller

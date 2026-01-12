@@ -91,5 +91,22 @@
     "act_empty_desc": "Sincronizza con Strava per vedere qui i tuoi allenamenti.",
     "act_sync_btn": "Sincronizza Ora",
     "weekly_activities": "Attività della Settimana",
-    "no_activities_this_week": "Nessuna attività registrata per questa settimana."
+    "no_activities_this_week": "Nessuna attività registrata per questa settimana.",
+    "personal_bests": "Record Personali",
+    "average_pace": "Passo Medio",
+    "based_on_activity": "Basato sull'attività",
+    "date": "Data",
+    "view_activity": "Vedi Attività",
+    "personal_bests_subtitle": "I tuoi successi e record di corsa a colpo d'occhio.",
+    "tip_personal_bests": "Record Personali",
+    "dist_400m": "400m",
+    "dist_1km": "1km",
+    "dist_1mile": "1 Miglio (1.6km)",
+    "dist_5km": "5km",
+    "dist_10km": "10km",
+    "dist_half_marathon": "Mezza Maratona (21k)",
+    "dist_marathon": "Maratona (42k)",
+    "dist_50km": "50km",
+    "dist_100km": "100km",
+    "dist_not_completed": "Non hai ancora completato questa distanza."
 }

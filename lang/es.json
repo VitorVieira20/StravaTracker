@@ -90,5 +90,7 @@
     "act_search_ph": "Buscar por nombre...",
     "act_empty_title": "No se encontraron actividades",
     "act_empty_desc": "Sincroniza con Strava para ver tus entrenamientos aquí.",
-    "act_sync_btn": "Sincronizar Ahora"
+    "act_sync_btn": "Sincronizar Ahora",
+    "weekly_activities": "Actividades de la Semana",
+    "no_activities_this_week": "No se registraron actividades para esta semana."
 }

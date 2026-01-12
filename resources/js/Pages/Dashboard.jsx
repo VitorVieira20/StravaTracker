@@ -28,7 +28,7 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory, isTvM
         const handleWheel = (e) => {
             if (isScrollingRef.current) return;
 
-            const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+            const delta = e.deltaX;
 
             if (Math.abs(delta) < 50) return;
 

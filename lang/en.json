@@ -89,5 +89,7 @@
     "act_search_ph": "Search by name...",
     "act_empty_title": "No activities found",
     "act_empty_desc": "Sync with Strava to see your workouts here.",
-    "act_sync_btn": "Sync Now"
+    "act_sync_btn": "Sync Now",
+    "weekly_activities": "Weekly Activities",
+    "no_activities_this_week": "No activities recorded for this week."
 }

@@ -98,7 +98,7 @@ export default function ActivityModal({ activity, onClose }) {
 
                     <div className="space-y-4">
                         <div className="bg-[#27272a] p-6 rounded-3xl border border-gray-800">
-                            <div className="grid grid-cols-2 gap-y-8 gap-x-4">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-y-8 gap-x-4">
                                 <div>
                                     <div className="flex items-center gap-2 text-gray-500 text-xs uppercase font-bold mb-1">
                                         <MapPin size={14} /> Distância

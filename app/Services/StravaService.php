@@ -124,16 +124,6 @@ class StravaService
                     'activity_count' => $weekRuns->count(),
                     'activities' => $weekRuns
                         ->sortByDesc('start_date_local')
-                        ->map(function ($run) {
-                            return [
-                                'id' => $run->id,
-                                'name' => $run->name,
-                                'date_human' => $run->start_date_local->locale(app()->getLocale())->isoFormat('dddd, D MMM'),
-                                'distance_km' => $run->distance_km,
-                                'pace' => $run->pace_formatted,
-                                'time_formatted' => $run->time_formatted,
-                            ];
-                        })
                         ->values(),
                 ];
             })

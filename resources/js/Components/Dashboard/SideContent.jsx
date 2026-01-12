@@ -1,5 +1,5 @@
 import { Link, router } from "@inertiajs/react";
-import { Calendar, MapPin, RefreshCw, Settings, Trophy, Route, Zap, Timer, Tv, LogOut } from "lucide-react";
+import { Calendar, MapPin, RefreshCw, Settings, Trophy, Route, Zap, Timer, Tv, LogOut, LayoutList } from "lucide-react";
 import { useState, useEffect } from "react";
 import useTranslation from '@/Hooks/useTranslation';
 import { route } from "ziggy-js";
@@ -49,8 +49,17 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                         </button>
 
                         <Link
+                            href={route('activities.index')}
+                            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
+                            title={t('tip_activities')}
+                        >
+                            <LayoutList size={20} />
+                        </Link>
+
+                        <Link
                             href={route('settings.index')}
                             className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
+                            title={t('tip_settings')}
                         >
                             <Settings size={20} />
                         </Link>

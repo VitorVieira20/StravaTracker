@@ -21,7 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'locale'
+        'locale',
+        'tv_mode',
     ];
 
     /**

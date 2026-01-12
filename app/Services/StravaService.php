@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Activity;
 use App\Models\RaceGoal;
+use App\Models\StravaAccount;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Collection;
@@ -12,22 +13,19 @@ use Illuminate\Support\Facades\Http;
 
 class StravaService
 {
-    protected $account;
-
-    public function __construct($account)
+    public function __construct()
     {
-        $this->account = $account;
     }
 
-    protected function ensureValidToken()
+    protected function ensureValidToken(StravaAccount $account)
     {
-        if (Carbon::now()->timestamp >= $this->account->expires_at) {
+        if (Carbon::now()->timestamp >= $account->expires_at) {
             try {
                 $response = Http::asForm()->post('https://www.strava.com/oauth/token', [
                     'client_id' => config('services.strava.client_id'),
                     'client_secret' => config('services.strava.client_secret'),
                     'grant_type' => 'refresh_token',
-                    'refresh_token' => $this->account->refresh_token,
+                    'refresh_token' => $account->refresh_token,
                 ]);
 
                 if ($response->failed()) {
@@ -36,27 +34,28 @@ class StravaService
 
                 $data = $response->json();
 
-                $this->account->update([
+                $account->update([
                     'access_token' => $data['access_token'],
                     'refresh_token' => $data['refresh_token'],
                     'expires_at' => $data['expires_at'],
                 ]);
             } catch (Exception $e) {
-                $this->account->delete();
+                $account->delete();
                 throw new Exception('Strava connection expired. Please reconnect.');
             }
         }
 
-        return $this->account->access_token;
+        return $account->access_token;
     }
 
     public function syncActivities()
     {
-        $token = $this->ensureValidToken();
+        $account = $this->getAccount();
+        $token = $this->ensureValidToken($account);
         $page = 1;
         $perPage = 200;
 
-        $lastActivityDate = Activity::where('user_id', $this->account->user_id)
+        $lastActivityDate = Activity::where('user_id', $account->user_id)
             ->latest('start_date_local')
             ->value('start_date_local');
 
@@ -81,7 +80,7 @@ class StravaService
                     Activity::updateOrCreate(
                         [
                             'strava_id' => $activityData['id'],
-                            'user_id' => $this->account->user_id,
+                            'user_id' => $account->user_id,
                         ],
                         [
                             'name' => $activityData['name'],
@@ -144,11 +143,12 @@ class StravaService
 
     public function formatStravaData(RaceGoal $goal, $shouldSync)
     {
+        $account = $this->getAccount();
         if ($shouldSync) {
             $this->syncActivities();
         }
 
-        $runs = Activity::where('user_id', $this->account->user_id)
+        $runs = Activity::where('user_id', $account->user_id)
             ->where('type', 'Run')
             ->where('start_date_local', '>=', $goal->start_date)
             ->orderBy('start_date_local', 'asc')
@@ -238,5 +238,31 @@ class StravaService
             'base_run_name' => $bestRun->name,
             'predicted_pace' => gmdate("i:s", $predictedSeconds / $targetDistanceKm)
         ];
+    }
+
+    private function getAccount()
+    {
+        $user = Auth::user();
+        if (!$user || !$user->stravaAccount) {
+            throw new Exception('User is not authenticated with Strava.');
+        }
+
+        return $user->stravaAccount;
+    }
+
+    public function getActivities()
+    {
+        $account = $this->getAccount();
+        return Activity::where('user_id', $account->user_id)
+            ->orderBy('start_date_local', 'desc')
+            ->paginate(20);
+    }
+
+    public function getActivity(string $activityId)
+    {
+        $account = $this->getAccount();
+        return Activity::where('user_id', $account->user_id)
+            ->where('id', $activityId)
+            ->firstOrFail();
     }
 }

@@ -16,9 +16,12 @@
     },
     "dependencies": {
         "@inertiajs/react": "^2.3.4",
+        "@mapbox/polyline": "^1.2.1",
         "@vitejs/plugin-react": "^5.1.2",
         "dayjs": "^1.11.19",
+        "leaflet": "^1.9.4",
         "lucide-react": "^0.562.0",
+        "react-leaflet": "^5.0.0",
         "recharts": "^3.6.0",
         "tailwindcss-animate": "^1.0.7",
         "ziggy-js": "^2.6.0"

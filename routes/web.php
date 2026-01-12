@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RaceGoalController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StravaAuthController;
 use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +26,19 @@ Route::middleware('auth.redirect')->group(function () {
 
     // LOGOUT
     Route::post('/logout', [StravaAuthController::class, 'logout'])->name('strava.logout');
+
+
+    // ACTIVITIES
+    Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
+
+
+    // SETTINGS
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
+    Route::get('/settings/export', [SettingsController::class, 'export'])->name('settings.export');
+
+
+    // PROFILE
+    Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 Route::middleware('guest.redirect')->group(function () {
@@ -32,6 +48,7 @@ Route::middleware('guest.redirect')->group(function () {
     Route::get('/auth/strava/redirect', [StravaAuthController::class, 'redirect'])->name('strava.redirect');
     Route::get('/auth/strava/callback', [StravaAuthController::class, 'callback'])->name('strava.callback');
 });
+
 
 // SUPPORT CONTACTS
 Route::get('/support', [SupportController::class, 'create'])->name('support.create');

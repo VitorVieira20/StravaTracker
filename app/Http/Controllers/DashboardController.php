@@ -24,7 +24,7 @@ class DashboardController extends Controller
             return to_route('goals.create');
         }
 
-        $stravaService = new StravaService($user->stravaAccount);
+        $stravaService = new StravaService();
         $raceGoalService = new RaceGoalService();
 
         $shouldSync = $request->has('refresh') || !$request->session()->get('strava_synced', false);
@@ -39,7 +39,8 @@ class DashboardController extends Controller
         return Inertia::render('Dashboard', [
             'raceGoal' => $raceGoalData,
             'weeklyHistory' => $stravaData['weeklyHistory'],
-            'stravaData' => $stravaData['stravaData']
+            'stravaData' => $stravaData['stravaData'],
+            'isTvMode' => (bool) $user->tv_mode
         ]);
     }
 }

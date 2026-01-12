@@ -95,9 +95,14 @@ export default function Contact({ user }) {
                                 </>
                             )}
                         </button>
-                        <a href={route('dashboard.index')} className="block text-center text-gray-500 text-md hover:text-white transition-colors">
+
+                        <button
+                            type="button"
+                            onClick={() => window.history.back()}
+                            className="block w-full text-center text-gray-500 text-md hover:text-white transition-colors cursor-pointer"
+                        >
                             {t('btn_back')}
-                        </a>
+                        </button>
                     </form>
                 </div>
             </div>

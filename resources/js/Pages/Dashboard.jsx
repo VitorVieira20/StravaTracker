@@ -5,9 +5,8 @@ import DashboardMainContent from '../Components/Dashboard/MainContent';
 
 const SLIDE_DURATION = 15000;
 
-export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
+export default function TVDashboard({ stravaData, raceGoal, weeklyHistory, isTvMode }) {
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [isTvMode, setIsTvMode] = useState(true);
     const totalSlides = 3;
 
     const isScrollingRef = useRef(false);
@@ -83,7 +82,7 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory }) {
         >
             <Head title="TV Dashboard" />
 
-            <DashboardSideContent raceGoal={raceGoal} stravaData={stravaData} isTvMode={isTvMode} setIsTvMode={setIsTvMode} />
+            <DashboardSideContent raceGoal={raceGoal} stravaData={stravaData} />
 
             <DashboardMainContent stravaData={stravaData} weeklyHistory={weeklyHistory} currentSlide={currentSlide} setCurrentSlide={setCurrentSlide} />
         </div >

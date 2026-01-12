@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('type');
             $table->dateTime('start_date_local');
             $table->string('timezone');
-            $table->decimal('distance', 10, 2); // Metros
-            $table->integer('moving_time'); // Segundos
-            $table->integer('elapsed_time'); // Segundos
+            $table->decimal('distance', 10, 2);
+            $table->integer('moving_time');
+            $table->integer('elapsed_time');
             $table->float('total_elevation_gain');
             $table->float('average_speed');
             $table->float('max_speed');

@@ -108,5 +108,15 @@
     "dist_marathon": "Maratona (42k)",
     "dist_50km": "50km",
     "dist_100km": "100km",
-    "dist_not_completed": "Non hai ancora completato questa distanza."
+    "dist_not_completed": "Non hai ancora completato questa distanza.",
+    "laps_no_splits": "Non hai ancora parziali (splits) per questa attività.",
+    "laps_syncing": "Sincronizzazione...",
+    "laps_fetch_btn": "Ottieni Splits da Strava",
+    "laps_title": "Splits / Giri",
+    "laps_col_dist": "Dist. (m)",
+    "laps_col_time": "Tempo (s)",
+    "laps_col_pace": "Passo",
+    "laps_add_row": "Aggiungi Riga Manuale",
+    "laps_error_fetch": "Errore nel recupero degli splits.",
+    "laps_error_save": "Errore nel salvataggio delle modifiche."
 }

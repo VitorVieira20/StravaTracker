@@ -17,7 +17,7 @@ class StravaService
     {
     }
 
-    protected function ensureValidToken(StravaAccount $account)
+    public function ensureValidToken(StravaAccount $account)
     {
         if (Carbon::now()->timestamp >= $account->expires_at) {
             try {

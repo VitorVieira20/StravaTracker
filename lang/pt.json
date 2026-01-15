@@ -108,5 +108,15 @@
     "dist_marathon": "Maratona (42k)",
     "dist_50km": "50km",
     "dist_100km": "100km",
-    "dist_not_completed": "Ainda não completaste esta distância."
+    "dist_not_completed": "Ainda não completaste esta distância.",
+    "laps_no_splits": "Ainda não tens parciais (splits) para esta atividade.",
+    "laps_syncing": "A Sincronizar...",
+    "laps_fetch_btn": "Obter Splits do Strava",
+    "laps_title": "Splits / Voltas",
+    "laps_col_dist": "Dist. (m)",
+    "laps_col_time": "Tempo (s)",
+    "laps_col_pace": "Pace",
+    "laps_add_row": "Adicionar Linha Manual",
+    "laps_error_fetch": "Erro ao buscar splits.",
+    "laps_error_save": "Erro ao guardar as alterações."
 }

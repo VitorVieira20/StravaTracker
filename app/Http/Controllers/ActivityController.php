@@ -6,6 +6,7 @@ use App\Models\Activity;
 use App\Services\StravaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class ActivityController extends Controller
@@ -42,11 +43,56 @@ class ActivityController extends Controller
             'average_heartrate' => $activity->average_heartrate,
             'total_elevation_gain' => $activity->total_elevation_gain,
             'map_polyline' => $activity->map_polyline,
+            'laps' => $activity->laps,
         ]);
 
         return Inertia::render('Activities/Index', [
             'activities' => $activities,
             'filters' => $request->only(['search']),
         ]);
+    }
+
+
+    public function fetchLaps(Activity $activity)
+    {
+        $user = Auth::user();
+        $account = $user->stravaAccount;
+
+        if (!$account) {
+            return response()->json(['error' => 'Conta não conectada'], 400);
+        }
+
+        try {
+            $response = Http::withToken($this->stravaService->ensureValidToken($account))
+                ->get("https://www.strava.com/api/v3/activities/{$activity->strava_id}");
+
+            if ($response->failed()) {
+                return response()->json(['error' => 'Erro no Strava'], 500);
+            }
+
+            $data = $response->json();
+            $laps = $data['laps'] ?? [];
+
+            $activity->update(['laps' => $laps]);
+
+            return response()->json(['laps' => $laps, 'message' => 'Splits sincronizados!']);
+
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    public function updateLaps(Request $request, Activity $activity)
+    {
+        $validated = $request->validate([
+            'laps' => 'nullable|array',
+            'laps.*.distance' => 'required|numeric',
+            'laps.*.moving_time' => 'required|numeric',
+        ]);
+
+        $activity->update(['laps' => $validated['laps']]);
+
+        return back()->with('success', 'Splits atualizados com sucesso.');
     }
 }

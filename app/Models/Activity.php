@@ -26,7 +26,8 @@ class Activity extends Model
         'average_grade_adjusted_speed',
         'average_watts',
         'average_heartrate',
-        'map_polyline'
+        'map_polyline',
+        'laps'
     ];
 
     /**
@@ -36,6 +37,7 @@ class Activity extends Model
      */
     protected $casts = [
         'start_date_local' => 'datetime',
+        'laps' => 'array',
     ];
 
     /**

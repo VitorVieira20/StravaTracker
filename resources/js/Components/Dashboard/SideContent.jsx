@@ -57,7 +57,7 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                         </Link>
 
                         <Link
-                            href={route('personal-bests.index')}
+                            href={route('milestones.index')}
                             className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
                             title={t('tip_personal_bests')}
                         >

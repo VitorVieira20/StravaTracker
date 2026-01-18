@@ -1,32 +1,12 @@
-import { Head, Link } from '@inertiajs/react';
 import useTranslation from '@/Hooks/useTranslation';
 import Badge from '@/Components/PersonalBests/Badge';
-import { Timer, Calendar, Route, ArrowLeft } from 'lucide-react';
-import { useState } from 'react';
-import ActivityModal from '../../Components/Modals/Activities/ActivityDetails';
-import { route } from 'ziggy-js';
+import { Timer, Calendar, Route } from 'lucide-react';
 
-export default function PersonalBestsIndex({ personalBests }) {
+export default function PersonalBestsTab({ personalBests, selectedActivity, setSelectedActivity }) {
     const { t } = useTranslation();
-    const [selectedActivity, setSelectedActivity] = useState(null);
 
     return (
-        <div className="bg-[#18181b] text-white min-h-screen p-4 sm:p-8">
-            <Head title={t('personal_bests')} />
-
             <div className="max-w-7xl mx-auto">
-                <div className="flex items-center gap-4 mb-8">
-                    <Link href={route('dashboard.index')} className="p-3 rounded-full hover:bg-gray-800 text-gray-400 transition-colors">
-                        <ArrowLeft size={24} />
-                    </Link>
-                    <div>
-                        <h1 className="text-3xl font-bold">{t('personal_bests') || "Records Pessoais"}</h1>
-                        <p className="text-gray-400 text-sm">
-                            {t('personal_bests_subtitle') || "As tuas conquistas e recordes de corrida num piscar de olhos."}
-                        </p>
-                    </div>
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {Object.entries(personalBests).map(([distance, record]) => (
                         <div
@@ -100,9 +80,6 @@ export default function PersonalBestsIndex({ personalBests }) {
                         </div>
                     ))}
                 </div>
-            </div>
-
-            <ActivityModal activity={selectedActivity} onClose={() => setSelectedActivity(null)} />
         </div>
     );
 }

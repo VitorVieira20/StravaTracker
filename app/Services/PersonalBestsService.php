@@ -1,22 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use App\Models\User;
 
-class PersonalBestsController extends Controller
+class PersonalBestsService
 {
-    public function index()
+    public function personalBests(User $user)
     {
-        $user = Auth::user();
-        $account = $user->stravaAccount;
-
-        if (!$account) {
-            return redirect()->route('dashboard.index');
-        }
-
-        // Definição Centralizada: Chave Lógica => [Metros, Chave de Tradução, Badge]
         $targets = [
             '400m' => ['meters' => 400, 'label' => 'dist_400m', 'badge' => 'sprint'],
             '1km' => ['meters' => 1000, 'label' => 'dist_1km', 'badge' => 'fast-mile'],
@@ -32,8 +23,6 @@ class PersonalBestsController extends Controller
         $personalRecords = [];
 
         foreach ($targets as $key => $data) {
-            // Traduz a label (Ex: "Meia Maratona (21k)" ou "Half Marathon (21k)")
-            // O frontend usa a chave do array para mostrar o título
             $displayLabel = __($data['label']); 
             
             $bestActivity = $user->activities()
@@ -56,14 +45,12 @@ class PersonalBestsController extends Controller
                 ];
             } else {
                 $personalRecords[$displayLabel] = [
-                    'message' => __('dist_not_completed'), // Mensagem traduzida também
+                    'message' => __('dist_not_completed'),
                     'badge' => $data['badge']
                 ];
             }
         }
 
-        return Inertia::render('PersonalBests/Index', [
-            'personalBests' => $personalRecords,
-        ]);
+        return $personalRecords;
     }
 }

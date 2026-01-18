@@ -11,6 +11,7 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory, isTvM
 
     const isScrollingRef = useRef(false);
     const touchStartX = useRef(0);
+    const touchStartY = useRef(0);
 
     useEffect(() => {
         let timer;
@@ -24,6 +25,7 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory, isTvM
         return () => clearInterval(timer);
     }, [isTvMode]);
 
+    
     useEffect(() => {
         const handleWheel = (e) => {
             if (isScrollingRef.current) return;
@@ -53,19 +55,26 @@ export default function TVDashboard({ stravaData, raceGoal, weeklyHistory, isTvM
 
     const handleTouchStart = (e) => {
         touchStartX.current = e.touches[0].clientX;
+        touchStartY.current = e.touches[0].clientY;
     };
 
     const handleTouchEnd = (e) => {
         if (isScrollingRef.current) return;
 
         const touchEndX = e.changedTouches[0].clientX;
-        const diff = touchStartX.current - touchEndX;
+        const touchEndY = e.changedTouches[0].clientY;
 
-        if (Math.abs(diff) < 50) return;
+        const diffX = touchStartX.current - touchEndX;
+        const diffY = touchStartY.current - touchEndY;
+
+        if (Math.abs(diffY) > Math.abs(diffX)) return;
+
+        if (Math.abs(diffX) < 50) return;
 
         isScrollingRef.current = true;
 
-        if (diff > 0) {
+        // Lógica de troca de slide (mantém-se igual)
+        if (diffX > 0) {
             setCurrentSlide((prev) => (prev + 1) % totalSlides);
         } else {
             setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);

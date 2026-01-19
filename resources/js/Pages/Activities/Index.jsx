@@ -36,8 +36,8 @@ export default function ActivitiesIndex({ activities }) {
 
             {selectedActivity && (
                 <ActivityModal
-                    activity={selectedActivity} 
-                    onClose={() => setSelectedActivity(null)} 
+                    activity={selectedActivity}
+                    onClose={() => setSelectedActivity(null)}
                 />
             )}
 
@@ -89,13 +89,13 @@ export default function ActivitiesIndex({ activities }) {
                 )}
 
                 {links.length > 3 && (
-                    <div className="flex justify-center mt-12 gap-2">
+                    <div className="flex flex-wrap justify-center mt-12 gap-2 pb-12">
                         {links.map((link, i) => (
                             link.url ? (
                                 <Link
                                     key={i}
                                     href={link.url}
-                                    className={`min-w-10 h-10 px-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center
+                                    className={`min-w-10 h-10 px-3 rounded-xl text-sm font-bold transition-all flex items-center justify-center mb-2
                         ${link.active
                                             ? 'bg-[#FC4C02] text-white shadow-lg shadow-orange-900/30 scale-105'
                                             : 'bg-[#27272a] text-gray-400 hover:text-white hover:bg-gray-700'}
@@ -106,7 +106,7 @@ export default function ActivitiesIndex({ activities }) {
                             ) : (
                                 <span
                                     key={i}
-                                    className="min-w-10 h-10 px-3 rounded-xl text-sm text-gray-600 bg-[#27272a]/50 cursor-not-allowed opacity-50 flex items-center justify-center"
+                                    className="min-w-10 h-10 px-3 rounded-xl text-sm text-gray-600 bg-[#27272a]/50 cursor-not-allowed opacity-50 flex items-center justify-center mb-2"
                                 >
                                     {getPageLabel(link.label)}
                                 </span>

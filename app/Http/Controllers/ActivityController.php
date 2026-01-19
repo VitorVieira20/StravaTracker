@@ -26,8 +26,42 @@ class ActivityController extends Controller
             $query->where('name', 'like', '%' . $search . '%');
         }
 
+        $sort = $request->input('sort', 'date_desc');
+
+        switch ($sort) {
+            case 'date_asc':
+                $query->orderBy('start_date_local', 'asc');
+                break;
+            case 'distance_desc':
+                $query->orderBy('distance', 'desc');
+                break;
+            case 'distance_asc':
+                $query->orderBy('distance', 'asc');
+                break;
+            case 'time_desc':
+                $query->orderBy('moving_time', 'desc');
+                break;
+            case 'time_asc':
+                $query->orderBy('moving_time', 'asc');
+                break;
+            case 'pace_fastest':
+                $query->orderBy('average_speed', 'desc');
+                break;
+            case 'pace_slowest':
+                $query->orderBy('average_speed', 'asc');
+                break;
+            case 'calories_desc':
+                $query->orderBy('calories', 'desc');
+                break;
+            case 'calories_asc':
+                $query->orderBy('calories', 'asc');
+                break;
+            default:
+                $query->orderBy('start_date_local', 'desc');
+                break;
+        }
+
         $activities = $query
-            ->orderBy('start_date_local', 'desc')
             ->paginate(12)
             ->withQueryString();
 
@@ -55,7 +89,6 @@ class ActivityController extends Controller
                     $link['url'] = str_replace('http://', 'https://', $link['url']);
                 }
             }
-
             $urlFields = ['first_page_url', 'last_page_url', 'next_page_url', 'prev_page_url', 'path'];
             foreach ($urlFields as $field) {
                 if (!empty($activitiesArray[$field])) {
@@ -65,8 +98,8 @@ class ActivityController extends Controller
         }
 
         return Inertia::render('Activities/Index', [
-            'activities' => $activitiesArray, // Passamos o Array modificado em vez do Objeto original
-            'filters' => $request->only(['search']),
+            'activities' => $activitiesArray,
+            'filters' => $request->only(['search', 'sort']),
         ]);
     }
 

@@ -1,10 +1,14 @@
 import { Calendar, Route, Timer, Clock, Flame } from 'lucide-react';
+import useTranslation from '@/Hooks/useTranslation';
 
 export default function ActivityCard({ run, setSelectedActivity }) {
+    const { t, locale } = useTranslation();
+
     const formatDate = (dateString) => {
         if (!dateString) return '--';
         const date = new Date(dateString);
-        return new Intl.DateTimeFormat('pt-PT', {
+        
+        return new Intl.DateTimeFormat(locale, {
             weekday: 'short',
             day: '2-digit',
             month: 'short'
@@ -59,7 +63,7 @@ export default function ActivityCard({ run, setSelectedActivity }) {
                     </span>
 
                     {calories && (
-                        <span className="flex items-center gap-1 text-sm font-bold text-orange-500/80" title="Potência Média">
+                        <span className="flex items-center gap-1 text-sm font-bold text-orange-500/80" title="Calorias">
                             <Flame size={12} /> {calories} Cal
                         </span>
                     )}
@@ -73,7 +77,7 @@ export default function ActivityCard({ run, setSelectedActivity }) {
             <div className="grid grid-cols-2 gap-4 mt-auto">
                 <div className="bg-[#18181b] p-3 rounded-2xl border border-gray-700/50">
                     <div className="flex items-center gap-1.5 text-gray-500 text-[10px] uppercase font-bold mb-1">
-                        <Route size={12} /> Distância
+                        <Route size={12} /> {t('card_dist')}
                     </div>
                     <div className="text-2xl font-bold text-white">
                         {distanceKm} <span className="text-sm font-medium text-gray-500">km</span>
@@ -82,7 +86,7 @@ export default function ActivityCard({ run, setSelectedActivity }) {
 
                 <div className="bg-[#18181b] p-3 rounded-2xl border border-gray-700/50">
                     <div className="flex items-center gap-1.5 text-gray-500 text-[10px] uppercase font-bold mb-1">
-                        <Timer size={12} /> Pace
+                        <Timer size={12} /> {t('card_pace')}
                     </div>
                     <div className="text-2xl font-bold text-[#FC4C02]">
                         {pace}
@@ -91,7 +95,7 @@ export default function ActivityCard({ run, setSelectedActivity }) {
 
                 <div className="col-span-2 flex items-center justify-between bg-[#18181b] px-4 py-2 rounded-xl border border-gray-700/50">
                     <div className="flex items-center gap-2 text-gray-500 text-xs font-bold uppercase">
-                        <Clock size={14} /> Tempo Total
+                        <Clock size={14} /> {t('card_time')}
                     </div>
                     <div className="font-mono text-lg text-gray-300 font-medium">
                         {time}

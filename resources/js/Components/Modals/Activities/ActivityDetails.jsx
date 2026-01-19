@@ -4,6 +4,7 @@ import { MapContainer, TileLayer, Polyline, useMap } from 'react-leaflet';
 import polyline from '@mapbox/polyline';
 import 'leaflet/dist/leaflet.css';
 import LapsEditor from '../../Activities/LapsEditor';
+import useTranslation from '@/Hooks/useTranslation';
 
 function FitBounds({ positions }) {
     const map = useMap();
@@ -17,6 +18,7 @@ function FitBounds({ positions }) {
 }
 
 export default function ActivityModal({ activity, onClose }) {
+    const { t, locale } = useTranslation();
     const [positions, setPositions] = useState([]);
     const [calories, setCalories] = useState(activity.calories);
 
@@ -61,7 +63,7 @@ export default function ActivityModal({ activity, onClose }) {
 
     const pace = calculatePace(activity.average_speed);
     const dateObj = new Date(activity.start_date_local || activity.date);
-    const dateStr = new Intl.DateTimeFormat('pt-PT', {
+    const dateStr = new Intl.DateTimeFormat(locale, {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric',
@@ -104,7 +106,7 @@ export default function ActivityModal({ activity, onClose }) {
                                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 gap-y-8 gap-x-4">
                                     <div>
                                         <div className="flex items-center gap-2 text-gray-500 text-xs uppercase font-bold mb-1">
-                                            <MapPin size={14} /> Distância
+                                            <MapPin size={14} /> {t('modal_dist')}
                                         </div>
                                         <div className="text-2xl font-bold text-white">
                                             {formatDistance(activity.distance)} <span className="text-sm text-gray-500 font-medium">km</span>
@@ -112,7 +114,7 @@ export default function ActivityModal({ activity, onClose }) {
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2 text-gray-500 text-xs uppercase font-bold mb-1">
-                                            <Clock size={14} /> Tempo
+                                            <Clock size={14} /> {t('modal_time')}
                                         </div>
                                         <div className="text-2xl font-bold text-white">
                                             {formatTime(activity.moving_time)}
@@ -120,7 +122,7 @@ export default function ActivityModal({ activity, onClose }) {
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2 text-gray-500 text-xs uppercase font-bold mb-1">
-                                            <Timer size={14} /> Pace
+                                            <Timer size={14} /> {t('modal_pace')}
                                         </div>
                                         <div className="text-2xl font-bold text-[#FC4C02]">
                                             {pace}
@@ -128,7 +130,7 @@ export default function ActivityModal({ activity, onClose }) {
                                     </div>
                                     <div>
                                         <div className="flex items-center gap-2 text-gray-500 text-xs uppercase font-bold mb-1">
-                                            <Navigation size={14} /> Elevação
+                                            <Navigation size={14} /> {t('modal_elev')}
                                         </div>
                                         <div className="text-2xl font-bold text-white">
                                             {activity.total_elevation_gain} <span className="text-sm text-gray-500 font-medium">m</span>
@@ -149,7 +151,7 @@ export default function ActivityModal({ activity, onClose }) {
                                             <div className="flex-1 min-w-27.5 bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
                                                 <Zap size={20} className="text-yellow-500 mb-2" />
                                                 <div className="text-xl font-bold text-white">{watts}w</div>
-                                                <div className="text-[10px] text-gray-500 uppercase">Potência</div>
+                                                <div className="text-[10px] text-gray-500 uppercase">{t('modal_watts')}</div>
                                             </div>
                                         )}
 
@@ -157,14 +159,14 @@ export default function ActivityModal({ activity, onClose }) {
                                             <div className="flex-1 min-w-27.5 bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
                                                 <Activity size={20} className="text-red-500 mb-2" />
                                                 <div className="text-xl font-bold text-center text-white">{bpm} bpm</div>
-                                                <div className="text-[10px] text-gray-500 uppercase">Cardíaco</div>
+                                                <div className="text-[10px] text-gray-500 uppercase">{t('modal_hr')}</div>
                                             </div>
                                         )}
 
                                         <div className="flex-1 min-w-27.5 bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
                                             <Flame size={20} className="text-orange-500 mb-2" />
                                             <div className="text-xl font-bold text-white">{cal}</div>
-                                            <div className="text-[10px] text-gray-500 uppercase">Calorias</div>
+                                            <div className="text-[10px] text-gray-500 uppercase">{t('modal_cal')}</div>
                                         </div>
 
                                     </div>
@@ -190,7 +192,7 @@ export default function ActivityModal({ activity, onClose }) {
                             ) : (
                                 <div className="w-full h-full min-h-75 flex flex-col items-center justify-center text-gray-500">
                                     <MapPin size={48} className="mb-4 opacity-50" />
-                                    <p>Mapa não disponível</p>
+                                    <p>{t('modal_no_map')}</p>
                                 </div>
                             )}
                         </div>

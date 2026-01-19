@@ -5,15 +5,24 @@ import useTranslation from '@/Hooks/useTranslation';
 import { route } from 'ziggy-js';
 import ActivityModal from '../../Components/Modals/Activities/ActivityDetails';
 import ActivityCard from '../../Components/Activities/ActivityCard';
+import ActivityFilters from '../../Components/Activities/ActivityFilters';
 
-export default function ActivitiesIndex({ activities }) {
+export default function ActivitiesIndex({ activities, filters }) {
+    const safeFilters = (Array.isArray(filters) || !filters) ? {} : filters;
+
     const { t } = useTranslation();
-    const [search, setSearch] = useState('');
+
+    const [search, setSearch] = useState(safeFilters.search || '');
+    const [sort, setSort] = useState(safeFilters.sort || 'date_desc');
     const [selectedActivity, setSelectedActivity] = useState(null);
 
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
-            router.get(route('activities.index'), { search: search }, { preserveState: true });
+            router.get(route('activities.index'), {
+                search: search,
+                sort: sort,
+                page: 1
+            }, { preserveState: true });
         }
     };
 
@@ -25,6 +34,18 @@ export default function ActivitiesIndex({ activities }) {
             return <ChevronRight size={20} />;
         }
         return <span dangerouslySetInnerHTML={{ __html: label }} />;
+    };
+
+    const handleSortChange = (newSort) => {
+        setSort(newSort);
+        router.get(route('activities.index'), {
+            search: search,
+            sort: newSort,
+            page: 1
+        }, {
+            preserveState: true,
+            preserveScroll: true
+        });
     };
 
     const list = activities.data || activities;
@@ -41,7 +62,8 @@ export default function ActivitiesIndex({ activities }) {
                 />
             )}
 
-            <div className="max-w-7xl mx-auto mb-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="max-w-7xl mx-auto mb-8 flex flex-col lg:flex-row md:items-center justify-between gap-6">
+
                 <div className="flex items-center gap-4">
                     <Link href={route('dashboard.index')} className="p-3 rounded-full hover:bg-gray-800 text-gray-400 transition-colors">
                         <ArrowLeft size={24} />
@@ -54,17 +76,24 @@ export default function ActivitiesIndex({ activities }) {
                     </div>
                 </div>
 
-                <div className="relative w-full md:w-96">
-                    <Search className="absolute left-3 top-3.5 text-gray-500" size={18} />
-                    <input
-                        type="text"
-                        placeholder={t('act_search_ph') || "Pesquisar por nome..."}
-                        className="w-full bg-[#27272a] border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-white focus:border-[#FC4C02] focus:ring-0 placeholder-gray-500 transition-all focus:bg-[#323236]"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        onKeyDown={handleSearch}
-                    />
+                <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <div className="w-full md:w-auto z-20">
+                        <ActivityFilters currentSort={sort} onSortChange={handleSortChange} />
+                    </div>
+
+                    <div className="relative w-full md:w-80 z-10">
+                        <Search className="absolute left-3 top-3.5 text-gray-500" size={18} />
+                        <input
+                            type="text"
+                            placeholder={t('act_search_ph')}
+                            className="w-full bg-[#27272a] border border-gray-700 rounded-xl pl-10 pr-4 py-3 text-white focus:border-[#FC4C02] focus:ring-0 placeholder-gray-500 transition-all focus:bg-[#323236]"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            onKeyDown={handleSearch}
+                        />
+                    </div>
                 </div>
+
             </div>
 
             <div className="max-w-7xl mx-auto">

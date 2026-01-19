@@ -5,7 +5,7 @@ import { Timer, RefreshCw, Save, Edit2, Trash2, Plus, X } from 'lucide-react';
 import { route } from 'ziggy-js';
 import useTranslation from '@/Hooks/useTranslation';
 
-export default function LapsEditor({ activity }) {
+export default function LapsEditor({ activity, setCalories }) {
     const { t } = useTranslation();
     const [laps, setLaps] = useState(activity.laps || []);
     const [isEditing, setIsEditing] = useState(false);
@@ -31,9 +31,9 @@ export default function LapsEditor({ activity }) {
         try {
             const res = await axios.post(route('activities.fetch-laps', activity.id));
             setLaps(res.data.laps);
+            if (res.data.calories) setCalories(res.data.calories);
         } catch (error) {
             console.error(error);
-            alert(t('laps_error_fetch') || "Erro ao buscar splits.");
         } finally {
             setIsLoading(false);
         }

@@ -1,4 +1,4 @@
-import { Calendar, Route, Timer, Zap, Clock } from 'lucide-react';
+import { Calendar, Route, Timer, Clock, Flame } from 'lucide-react';
 
 export default function ActivityCard({ run, setSelectedActivity }) {
     const formatDate = (dateString) => {
@@ -44,7 +44,7 @@ export default function ActivityCard({ run, setSelectedActivity }) {
     const distanceKm = formatDistance(run.distance);
     const pace = calculatePace(run.average_speed);
     const time = formatTime(run.moving_time);
-    const watts = run.average_watts ? Math.round(run.average_watts) : null;
+    const calories = run.calories ? Math.round(run.calories) : null;
 
     return (
         <div
@@ -58,9 +58,9 @@ export default function ActivityCard({ run, setSelectedActivity }) {
                         {formatDate(run.start_date_local)}
                     </span>
 
-                    {watts && (
-                        <span className="flex items-center gap-1 text-sm font-bold text-yellow-500/80" title="Potência Média">
-                            <Zap size={12} /> {watts}w
+                    {calories && (
+                        <span className="flex items-center gap-1 text-sm font-bold text-orange-500/80" title="Potência Média">
+                            <Flame size={12} /> {calories} Cal
                         </span>
                     )}
                 </div>

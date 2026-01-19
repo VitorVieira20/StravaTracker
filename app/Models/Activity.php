@@ -26,6 +26,7 @@ class Activity extends Model
         'average_grade_adjusted_speed',
         'average_watts',
         'average_heartrate',
+        'calories',
         'map_polyline',
         'laps'
     ];

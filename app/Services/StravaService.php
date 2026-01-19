@@ -60,6 +60,7 @@ class StravaService
             ->value('start_date_local');
 
         $after = $lastActivityDate ? Carbon::parse($lastActivityDate)->timestamp : null;
+        $after = null;
 
         do {
             $response = Http::withToken($token)

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Calendar, Clock, MapPin, Navigation, Timer, Zap, Activity, X } from 'lucide-react';
+import { Calendar, Clock, MapPin, Navigation, Timer, Zap, Activity, X, Flame } from 'lucide-react'; // <--- Adicionado Flame
 import { MapContainer, TileLayer, Polyline, useMap } from 'react-leaflet';
 import polyline from '@mapbox/polyline';
 import 'leaflet/dist/leaflet.css';
@@ -18,6 +18,7 @@ function FitBounds({ positions }) {
 
 export default function ActivityModal({ activity, onClose }) {
     const [positions, setPositions] = useState([]);
+    const [calories, setCalories] = useState(activity.calories);
 
     useEffect(() => {
         const handleEsc = (e) => {
@@ -136,18 +137,39 @@ export default function ActivityModal({ activity, onClose }) {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
-                                    <Zap size={20} className="text-yellow-500 mb-2" />
-                                    <div className="text-xl font-bold text-white">{Math.round(activity.average_watts || 0)}w</div>
-                                    <div className="text-[10px] text-gray-500 uppercase">Potência</div>
-                                </div>
-                                <div className="bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
-                                    <Activity size={20} className="text-red-500 mb-2" />
-                                    <div className="text-xl font-bold text-white">{Math.round(activity.average_heartrate || 0)} bpm</div>
-                                    <div className="text-[10px] text-gray-500 uppercase">Cardíaco</div>
-                                </div>
-                            </div>
+                            {(() => {
+                                const watts = Math.round(activity.average_watts || 0);
+                                const bpm = Math.round(activity.average_heartrate || 0);
+                                const cal = calories || 0;
+
+                                return (
+                                    <div className="flex flex-wrap gap-4">
+
+                                        {watts > 0 && (
+                                            <div className="flex-1 min-w-27.5 bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
+                                                <Zap size={20} className="text-yellow-500 mb-2" />
+                                                <div className="text-xl font-bold text-white">{watts}w</div>
+                                                <div className="text-[10px] text-gray-500 uppercase">Potência</div>
+                                            </div>
+                                        )}
+
+                                        {bpm > 0 && (
+                                            <div className="flex-1 min-w-27.5 bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
+                                                <Activity size={20} className="text-red-500 mb-2" />
+                                                <div className="text-xl font-bold text-center text-white">{bpm} bpm</div>
+                                                <div className="text-[10px] text-gray-500 uppercase">Cardíaco</div>
+                                            </div>
+                                        )}
+
+                                        <div className="flex-1 min-w-27.5 bg-[#27272a] p-4 rounded-3xl border border-gray-800 flex flex-col justify-center items-center">
+                                            <Flame size={20} className="text-orange-500 mb-2" />
+                                            <div className="text-xl font-bold text-white">{cal}</div>
+                                            <div className="text-[10px] text-gray-500 uppercase">Calorias</div>
+                                        </div>
+
+                                    </div>
+                                );
+                            })()}
                         </div>
 
                         <div className="lg:col-span-2 min-h-75 h-full bg-[#27272a] rounded-3xl border border-gray-800 overflow-hidden relative shadow-inner flex flex-col">
@@ -175,7 +197,7 @@ export default function ActivityModal({ activity, onClose }) {
                     </div>
 
                     <div className="w-full border-t border-gray-800 pt-2">
-                        <LapsEditor activity={activity} />
+                        <LapsEditor activity={activity} setCalories={setCalories} />
                     </div>
 
                 </div>

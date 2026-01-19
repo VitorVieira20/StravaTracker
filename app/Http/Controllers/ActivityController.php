@@ -41,6 +41,7 @@ class ActivityController extends Controller
             'average_speed' => $activity->average_speed,
             'average_watts' => $activity->average_watts,
             'average_heartrate' => $activity->average_heartrate,
+            'calories' => $activity->calories,
             'total_elevation_gain' => $activity->total_elevation_gain,
             'map_polyline' => $activity->map_polyline,
             'laps' => $activity->laps,
@@ -71,11 +72,18 @@ class ActivityController extends Controller
             }
 
             $data = $response->json();
+
             $laps = $data['laps'] ?? [];
+            
+            $updateData = ['laps' => $laps];
 
-            $activity->update(['laps' => $laps]);
+            if (isset($data['calories'])) {
+                $updateData['calories'] = $data['calories'];
+            }
 
-            return response()->json(['laps' => $laps, 'message' => 'Splits sincronizados!']);
+            $activity->update($updateData);
+
+            return response()->json(['laps' => $laps, 'calories' => $updateData['calories'] ?? null, 'message' => 'Splits synchronized!']);
 
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);

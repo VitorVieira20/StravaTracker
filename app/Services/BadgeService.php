@@ -127,7 +127,7 @@ class BadgeService
             $this->award($user, 'weekend_warrior', $date);
         }
 
-        if ($user->activities()->count() == 1) {
+        if ($user->activities()->count() >= 1 && !$user->badges()->where('identifier', 'first_activity')->exists()) {
             $this->award($user, 'first_activity', $date);
         }
 

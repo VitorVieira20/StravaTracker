@@ -47,8 +47,25 @@ class ActivityController extends Controller
             'laps' => $activity->laps,
         ]);
 
+        $activitiesArray = $activities->toArray();
+
+        if (app()->environment('production')) {
+            foreach ($activitiesArray['links'] as &$link) {
+                if (!empty($link['url'])) {
+                    $link['url'] = str_replace('http://', 'https://', $link['url']);
+                }
+            }
+
+            $urlFields = ['first_page_url', 'last_page_url', 'next_page_url', 'prev_page_url', 'path'];
+            foreach ($urlFields as $field) {
+                if (!empty($activitiesArray[$field])) {
+                    $activitiesArray[$field] = str_replace('http://', 'https://', $activitiesArray[$field]);
+                }
+            }
+        }
+
         return Inertia::render('Activities/Index', [
-            'activities' => $activities,
+            'activities' => $activitiesArray, // Passamos o Array modificado em vez do Objeto original
             'filters' => $request->only(['search']),
         ]);
     }
@@ -74,7 +91,7 @@ class ActivityController extends Controller
             $data = $response->json();
 
             $laps = $data['laps'] ?? [];
-            
+
             $updateData = ['laps' => $laps];
 
             if (isset($data['calories'])) {

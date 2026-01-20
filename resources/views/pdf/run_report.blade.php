@@ -13,120 +13,62 @@
             line-height: 1.5;
         }
 
-        /* --- HEADER --- */
         .header {
             background-color: #000000;
             color: #ffffff;
             padding: 30px 40px;
-            margin: -40px -40px 30px -40px; /* Estende até às bordas */
+            margin: -40px -40px 30px -40px;
             border-bottom: 4px solid #FC4C02;
         }
-        .header-content {
-            display: table;
-            width: 100%;
-        }
-        .brand {
-            font-size: 24px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
+        .header-content { display: table; width: 100%; }
+        .brand { font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
         .brand span { color: #FC4C02; }
-        .date {
-            text-align: right;
-            font-size: 10px;
-            color: #999;
-        }
-
-        /* --- USER INFO --- */
-        .user-section {
-            margin-bottom: 30px;
-            border-left: 4px solid #FC4C02;
-            padding-left: 15px;
-        }
+        
+        .user-section { margin-bottom: 30px; border-left: 4px solid #FC4C02; padding-left: 15px; }
         .user-name { font-size: 20px; font-weight: bold; color: #000; }
         .user-meta { font-size: 12px; color: #666; }
 
-        /* --- STATS CARDS --- */
-        .stats-container {
-            width: 100%;
-            margin-bottom: 30px;
-        }
+        .stats-container { width: 100%; margin-bottom: 30px; }
         .stat-card {
-            display: inline-block;
-            width: 23%;
-            background-color: #f4f4f5; /* Zinc-100 */
-            border: 1px solid #e4e4e7;
-            border-radius: 8px;
-            padding: 15px 5px;
-            text-align: center;
-            margin-right: 1%;
+            display: inline-block; width: 23%; background-color: #f4f4f5;
+            border: 1px solid #e4e4e7; border-radius: 8px; padding: 15px 5px;
+            text-align: center; margin-right: 1%;
         }
-        .stat-value {
-            display: block;
-            font-size: 18px;
-            font-weight: bold;
-            color: #FC4C02;
-        }
-        .stat-label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #52525b;
-            letter-spacing: 1px;
+        .stat-value { display: block; font-size: 18px; font-weight: bold; color: #FC4C02; }
+        .stat-label { font-size: 10px; text-transform: uppercase; color: #52525b; letter-spacing: 1px; }
+
+        h2 {
+            font-size: 16px; text-transform: uppercase; border-bottom: 2px solid #000;
+            padding-bottom: 5px; margin-top: 30px; color: #000; page-break-after: avoid;
         }
 
-        /* --- TABLES --- */
-        h2 {
-            font-size: 16px;
-            text-transform: uppercase;
-            border-bottom: 2px solid #000;
-            padding-bottom: 5px;
-            margin-top: 30px;
-            color: #000;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 11px;
-            margin-top: 10px;
-        }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; margin-top: 10px; }
         th {
-            background-color: #000000;
-            color: #FC4C02;
-            text-transform: uppercase;
-            padding: 10px;
-            text-align: left;
-            font-size: 9px;
-            letter-spacing: 1px;
+            background-color: #000000; color: #FC4C02; text-transform: uppercase;
+            padding: 8px 10px; text-align: left; font-size: 9px; letter-spacing: 1px;
         }
-        td {
-            padding: 8px 10px;
-            border-bottom: 1px solid #e4e4e7;
-            color: #333;
-        }
+        td { padding: 8px 10px; border-bottom: 1px solid #e4e4e7; color: #333; }
         tr:nth-child(even) { background-color: #fafafa; }
         
-        /* Helpers */
         .text-right { text-align: right; }
+        .text-center { text-align: center; }
         .font-mono { font-family: 'Courier', monospace; }
-        .badge {
-            background: #FC4C02;
-            color: white;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 8px;
+        .text-bold { font-weight: bold; }
+        .text-orange { color: #FC4C02; }
+
+        .badge-tier {
+            font-size: 8px; font-weight: bold; text-transform: uppercase;
+            padding: 2px 6px; border-radius: 4px; color: white; display: inline-block;
         }
+        .tier-bronze { background-color: #cd7f32; }
+        .tier-silver { background-color: #9ca3af; }
+        .tier-gold { background-color: #eab308; }
+        .tier-platinum { background-color: #3b82f6; }
 
         .footer {
-            position: fixed;
-            bottom: 20px;
-            left: 40px;
-            right: 40px;
-            font-size: 9px;
-            text-align: center;
-            color: #a1a1aa;
-            border-top: 1px solid #e4e4e7;
-            padding-top: 10px;
+            position: fixed; bottom: 20px; left: 40px; right: 40px;
+            font-size: 9px; text-align: center; color: #a1a1aa;
+            border-top: 1px solid #e4e4e7; padding-top: 10px;
         }
     </style>
 </head>
@@ -169,6 +111,65 @@
         </div>
     </div>
 
+    @if(count($personalBests) > 0)
+    <h2>Recordes Pessoais</h2>
+    <table>
+        <thead>
+            <tr>
+                <th width="20%">Distância</th>
+                <th width="20%">Tempo</th>
+                <th width="20%">Pace Médio</th>
+                <th width="40%">Data / Atividade</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($personalBests as $label => $record)
+                @if(!isset($record['message']))
+                <tr>
+                    <td class="text-bold">{{ ucfirst($label) }}</td>
+                    <td class="font-mono text-orange text-bold">{{ $record['calculated_time'] }}</td>
+                    <td class="font-mono">{{ $record['pace'] }}/km</td>
+                    <td>
+                        {{ $record['data'] }}<br>
+                        <span style="font-size: 9px; color: #888;">{{ \Illuminate\Support\Str::limit($record['based_on_activity'], 30) }}</span>
+                    </td>
+                </tr>
+                @endif
+            @endforeach
+        </tbody>
+    </table>
+    @endif
+
+    @if($badges->count() > 0)
+    <h2>Medalhas Conquistadas ({{ $badges->count() }})</h2>
+    <table>
+        <thead>
+            <tr>
+                <th width="40%">Medalha</th>
+                <th width="20%">Categoria</th>
+                <th width="20%">Nível</th>
+                <th width="20%" class="text-right">Conquistado em</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($badges as $badge)
+            <tr>
+                <<td class="text-bold">{{ __('badge_' . $badge->identifier) }}</td>
+                <td style="text-transform: capitalize;">{{ $badge->category }}</td>
+                <td>
+                    <span class="badge-tier tier-{{ $badge->tier }}">
+                        {{ $badge->tier }}
+                    </span>
+                </td>
+                <td class="text-right font-mono">
+                    {{ \Carbon\Carbon::parse($badge->pivot->awarded_at)->format('d/m/Y') }}
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+    @endif
+
     @if($goal)
     <h2>Objetivo Atual</h2>
     <table style="margin-bottom: 20px;">
@@ -195,7 +196,9 @@
     </table>
     @endif
 
-    <h2>Histórico de Atividades</h2>
+    <div style="page-break-before: always;"></div>
+
+    <h2>Histórico Completo de Atividades</h2>
     <table>
         <thead>
             <tr>
@@ -211,10 +214,10 @@
             @foreach($activities as $run)
             <tr>
                 <td>{{ $run->start_date_local->format('d/m/Y') }}<br><span style="font-size: 9px; color: #888;">{{ $run->start_date_local->format('H:i') }}</span></td>
-                <td>{{ $run->name }}</td>
+                <td>{{ \Illuminate\Support\Str::limit($run->name, 40) }}</td>
                 <td class="text-right"><strong>{{ $run->distance_km }}</strong> km</td>
                 <td class="text-right font-mono">{{ $run->time_formatted }}</td>
-                <td class="text-right font-mono" style="color: #FC4C02;">{{ $run->pace_formatted }}</td>
+                <td class="text-right font-mono text-orange">{{ $run->pace_formatted }}</td>
                 <td class="text-right">{{ $run->average_watts ?? '-' }}</td>
             </tr>
             @endforeach

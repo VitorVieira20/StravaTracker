@@ -23,7 +23,7 @@
     <link rel="preload" as="style"
         href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@100..900&display=swap">
 
-    <title>Strava Tracker</title>
+    <title>Run Tracker</title>
 
     @viteReactRefresh
     @routes

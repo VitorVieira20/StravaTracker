@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Activity;
 use App\Models\Badge;
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class BadgeService
 {
@@ -193,5 +194,118 @@ class BadgeService
             $this->award($user, 'streak_5runs', $date);
         if ($streakCount >= 7)
             $this->award($user, 'streak_7runs', $date);
+    }
+
+
+    public function calcCurrentStreak(User $user): int
+    {
+        $activityDates = $user->activities()
+            ->where('type', 'Run')
+            ->orderBy('start_date_local', 'desc')
+            ->pluck('start_date_local')
+            ->map(fn($d) => $d->format('Y-m-d'))
+            ->unique()
+            ->values();
+
+        $currentStreak = 0;
+        if ($activityDates->count() > 0) {
+            $currentStreak = 1;
+            $checkDate = Carbon::parse($activityDates[0]);
+            
+            if ($checkDate->diffInDays(now()) <= 1) {
+                for ($i = 1; $i < $activityDates->count(); $i++) {
+                    $prevDate = Carbon::parse($activityDates[$i]);
+                    if ($checkDate->diffInDays($prevDate) == 1) {
+                        $currentStreak++;
+                        $checkDate = $prevDate;
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                $currentStreak = 0;
+            }
+        }
+
+        return $currentStreak;
+    }
+
+
+    public function userBadgesWithProgress(Activity $userStats, int $currentStreak): Collection
+    {
+        $allBadges = Badge::all()->map(function ($badge) use ($userStats, $currentStreak) {
+            $progress = null;
+            $id = $badge->identifier;
+
+            if (str_starts_with($id, 'dist_') || $id === 'marathon' || $id === 'half_marathon') {
+                $targetKm = 0;
+                if ($id === 'marathon') $targetKm = 42.195;
+                elseif ($id === 'half_marathon') $targetKm = 21.097;
+                else $targetKm = (int) filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+
+                $progress = [
+                    'current' => $userStats->max_distance,
+                    'target' => $targetKm * 1000,
+                    'unit' => 'km'
+                ];
+            }
+            elseif (str_starts_with($id, 'total_')) {
+                $targetKm = (int) filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+                $progress = [
+                    'current' => $userStats->total_distance,
+                    'target' => $targetKm * 1000,
+                    'unit' => 'km'
+                ];
+            }
+            elseif (str_starts_with($id, 'elev_')) {
+                $targetMeters = (int) filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+                $progress = [
+                    'current' => $userStats->max_elevation,
+                    'target' => $targetMeters,
+                    'unit' => 'm'
+                ];
+            }
+            elseif (str_starts_with($id, 'cal_')) {
+                $targetCal = (int) filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+                $progress = [
+                    'current' => $userStats->max_calories,
+                    'target' => $targetCal,
+                    'unit' => 'kcal'
+                ];
+            }
+            elseif (str_starts_with($id, 'time_')) {
+                $targetMinutes = 0;
+                $val = (int) filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+                if (str_ends_with($id, 'h')) $targetMinutes = $val * 60;
+                else $targetMinutes = $val;
+
+                $progress = [
+                    'current' => $userStats->max_time / 60,
+                    'target' => $targetMinutes,
+                    'unit' => 'min'
+                ];
+            }
+            elseif (str_starts_with($id, 'streak_')) {
+                $targetRuns = (int) filter_var($id, FILTER_SANITIZE_NUMBER_INT);
+                $progress = [
+                    'current' => $currentStreak,
+                    'target' => $targetRuns,
+                    'unit' => 'runs'
+                ];
+            }
+
+            if ($progress) {
+                if ($progress['target'] > 0) {
+                    $progress['percentage'] = min(100, round(($progress['current'] / $progress['target']) * 100));
+                } else {
+                    $progress['percentage'] = 0;
+                }
+                $badge->progress = $progress;
+            }
+
+            return $badge;
+        });
+
+        return $allBadges;
     }
 }

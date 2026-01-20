@@ -217,5 +217,6 @@
     "modal_watts": "Potência",
     "modal_hr": "Cardíaco",
     "modal_cal": "Calorias",
-    "modal_no_map": "Mapa não disponível"
+    "modal_no_map": "Mapa não disponível",
+    "badge_progress": "Progresso Atual"
 }

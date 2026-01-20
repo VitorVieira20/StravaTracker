@@ -18,7 +18,7 @@ export default function MilestonesIndex({ allBadges, userBadges, personalBests }
 
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-                    
+
                     <div className="flex items-center gap-4">
                         <Link href={route('dashboard.index')} className="p-3 rounded-full hover:bg-gray-800 text-gray-400 transition-colors">
                             <ArrowLeft size={24} />
@@ -34,22 +34,20 @@ export default function MilestonesIndex({ allBadges, userBadges, personalBests }
                     <div className="flex bg-[#27272a] p-1 rounded-xl self-start md:self-auto">
                         <button
                             onClick={() => setActiveTab('personal_bests')}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-                                activeTab === 'personal_bests' 
-                                    ? 'bg-[#FC4C02] text-white shadow-lg' 
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                            }`}
+                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer ${activeTab === 'personal_bests'
+                                ? 'bg-[#FC4C02] text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
                         >
                             <Timer size={16} />
                             {t('tab_records')}
                         </button>
                         <button
                             onClick={() => setActiveTab('badges')}
-                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer ${
-                                activeTab === 'badges' 
-                                    ? 'bg-[#FC4C02] text-white shadow-lg' 
-                                    : 'text-gray-400 hover:text-white hover:bg-white/5'
-                            }`}
+                            className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all cursor-pointer ${activeTab === 'badges'
+                                ? 'bg-[#FC4C02] text-white shadow-lg'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
+                                }`}
                         >
                             <Medal size={16} />
                             {t('tab_trophies')}
@@ -58,10 +56,10 @@ export default function MilestonesIndex({ allBadges, userBadges, personalBests }
                 </div>
 
                 {activeTab === 'personal_bests' && (
-                    <PersonalBestsTab 
-                        personalBests={personalBests} 
-                        selectedActivity={selectedActivity} 
-                        setSelectedActivity={setSelectedActivity} 
+                    <PersonalBestsTab
+                        personalBests={personalBests}
+                        selectedActivity={selectedActivity}
+                        setSelectedActivity={setSelectedActivity}
                     />
                 )}
 

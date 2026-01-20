@@ -18,6 +18,8 @@ function FitBounds({ positions }) {
 }
 
 export default function ActivityModal({ activity, onClose }) {
+    if (!activity) return null;
+    
     const { t, locale } = useTranslation();
     const [positions, setPositions] = useState([]);
     const [calories, setCalories] = useState(activity.calories);

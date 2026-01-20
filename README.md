@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Strava_API-Under_Review-orange" alt="Strava Status">
+  <img src="https://img.shields.io/badge/Strava_API-Approved-brightgreen" alt="Strava Status">
   <img src="https://img.shields.io/badge/Status-Private_Beta-blue" alt="Status">
   <img src="https://img.shields.io/badge/License-Proprietary-red" alt="License">
 </p>

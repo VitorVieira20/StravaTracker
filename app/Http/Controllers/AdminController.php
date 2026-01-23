@@ -21,7 +21,7 @@ class AdminController extends Controller
     {
         $request->validate(['code' => 'required']);
 
-        if ($request->code === env('ADMIN_ACCESS_KEY')) {
+        if ($request->code === config('auth.admin.access_key')) {
             session(['admin_authenticated' => true]);
             return redirect()->route('admin.dashboard');
         }

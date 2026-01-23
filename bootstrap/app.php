@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AdminAccess;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RedirectIfNotAuthenticated;
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth.redirect' => RedirectIfNotAuthenticated::class,
             'guest.redirect' => RedirectIfAuthenticated::class,
+            'admin.auth' => AdminAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

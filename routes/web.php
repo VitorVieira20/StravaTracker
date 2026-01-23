@@ -1,5 +1,7 @@
 <?php
 
+require __DIR__ . '/admin.php';
+
 use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LanguageController;
@@ -10,7 +12,6 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\StravaAuthController;
 use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\Route;
-
 
 Route::middleware('auth.redirect')->group(function () {
 

@@ -78,29 +78,33 @@ class StravaService
 
             foreach ($activities as $activityData) {
                 if ($activityData['type'] === 'Run') {
-                    Activity::updateOrCreate(
-                        [
-                            'strava_id' => $activityData['id'],
-                            'user_id' => $account->user_id,
-                        ],
-                        [
-                            'name' => $activityData['name'],
-                            'type' => $activityData['type'],
-                            'start_date_local' => Carbon::parse($activityData['start_date_local']),
-                            'timezone' => $activityData['timezone'],
-                            'distance' => $activityData['distance'],
-                            'moving_time' => $activityData['moving_time'],
-                            'elapsed_time' => $activityData['elapsed_time'],
-                            'total_elevation_gain' => $activityData['total_elevation_gain'],
-                            'average_speed' => $activityData['average_speed'],
-                            'max_speed' => $activityData['max_speed'],
-                            'average_grade_adjusted_speed' => $activityData['average_grade_adjusted_speed'] ?? null,
-                            'average_watts' => $activityData['average_watts'] ?? null,
-                            'average_heartrate' => $activityData['average_heartrate'] ?? null,
-                            'map_polyline' => $activityData['map']['summary_polyline'] ?? null,
-                            'calories' => round(($activityData['distance'] / 1000) * 70 * 1.036),
-                        ]
-                    );
+                    $activity = Activity::firstOrNew([
+                        'strava_id' => $activityData['id'],
+                        'user_id' => $account->user_id,
+                    ]);
+
+                    $activity->fill([
+                        'name' => $activityData['name'],
+                        'type' => $activityData['type'],
+                        'start_date_local' => Carbon::parse($activityData['start_date_local']),
+                        'timezone' => $activityData['timezone'],
+                        'distance' => $activityData['distance'],
+                        'moving_time' => $activityData['moving_time'],
+                        'elapsed_time' => $activityData['elapsed_time'],
+                        'total_elevation_gain' => $activityData['total_elevation_gain'],
+                        'average_speed' => $activityData['average_speed'],
+                        'max_speed' => $activityData['max_speed'],
+                        'average_grade_adjusted_speed' => $activityData['average_grade_adjusted_speed'] ?? null,
+                        'average_watts' => $activityData['average_watts'] ?? null,
+                        'average_heartrate' => $activityData['average_heartrate'] ?? null,
+                        'map_polyline' => $activityData['map']['summary_polyline'] ?? null,
+                    ]);
+
+                    if (empty($activity->calories)) {
+                        $activity->calories = $activityData['calories'] ?? round(($activityData['distance'] / 1000) * 70 * 1.036);
+                    }
+
+                    $activity->save();
                 }
             }
 

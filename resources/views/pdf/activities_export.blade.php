@@ -15,13 +15,12 @@
         .header {
             background-color: #000000;
             color: #ffffff;
-            padding: 20px 40px;
+            padding: 30px 40px;
             margin: -40px -40px 30px -40px;
             border-bottom: 4px solid #FC4C02;
-            display: table;
-            width: 100%;
         }
-        .brand { font-size: 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
+        .header-content { display: table; width: 100%; }
+        .brand { font-size: 24px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; }
         .brand span { color: #FC4C02; }
         
         h2 {
@@ -47,12 +46,14 @@
 <body>
 
     <div class="header">
-        <div style="display: table-cell; vertical-align: middle;">
-            <div class="brand">Run<span>Tracker</span></div>
-        </div>
-        <div style="display: table-cell; vertical-align: middle; text-align: right;">
-            <div style="font-size: 10px; color: #ccc;">EXPORTAÇÃO DE ATIVIDADES</div>
+        <div class="header-content">
+            <div style="display: table-cell; vertical-align: middle;">
+                <div class="brand">Run<span>Tracker</span></div>
+            </div>
+            <div style="display: table-cell; vertical-align: middle; text-align: right;">
+                <div style="font-size: 10px; color: #ccc;">EXPORTAÇÃO DE ATIVIDADES</div>
             <div style="font-size: 10px; color: #FC4C02;">{{ date('d/m/Y H:i') }}</div>
+            </div>
         </div>
     </div>
 

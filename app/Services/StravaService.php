@@ -98,6 +98,7 @@ class StravaService
                             'average_watts' => $activityData['average_watts'] ?? null,
                             'average_heartrate' => $activityData['average_heartrate'] ?? null,
                             'map_polyline' => $activityData['map']['summary_polyline'] ?? null,
+                            'calories' => round(($activityData['distance'] / 1000) * 70 * 1.036),
                         ]
                     );
                 }

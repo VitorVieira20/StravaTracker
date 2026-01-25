@@ -31,6 +31,7 @@ Route::middleware('auth.redirect')->group(function () {
 
 
     // ACTIVITIES
+    Route::get('/activities/export', [ActivityController::class, 'export'])->name('activities.export');
     Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
     Route::post('/activities/{activity}/fetch-laps', [ActivityController::class, 'fetchLaps'])->name('activities.fetch-laps');
     Route::put('/activities/{activity}/laps', [ActivityController::class, 'updateLaps'])->name('activities.update-laps');

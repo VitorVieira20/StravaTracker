@@ -218,5 +218,20 @@
     "modal_hr": "Cardíaco",
     "modal_cal": "Calorias",
     "modal_no_map": "Mapa não disponível",
-    "badge_progress": "Progresso Atual"
+    "badge_progress": "Progresso Atual",
+    "export_title": "Exportar Atividades",
+    "export_btn": "Exportar",
+    "export_format_label": "Formato do Arquivo",
+    "export_date_from": "A partir de",
+    "export_cols_label": "Colunas",
+    "export_col_date": "Data",
+    "export_col_name": "Nome",
+    "export_col_dist": "Distância",
+    "export_col_time": "Tempo Movimento",
+    "export_col_elapsed": "Tempo Decorrido",
+    "export_col_elev": "Elevação",
+    "export_col_pace": "Ritmo Médio",
+    "export_col_cal": "Calorias",
+    "export_col_hr": "Frequência Card.",
+    "cancel": "Cancelar"
 }

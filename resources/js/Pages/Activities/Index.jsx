@@ -1,11 +1,12 @@
 import { Head, Link, router } from '@inertiajs/react';
-import { ArrowLeft, Search, Activity, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Search, Activity, ChevronLeft, ChevronRight, Download } from 'lucide-react';
 import { useState } from 'react';
 import useTranslation from '@/Hooks/useTranslation';
 import { route } from 'ziggy-js';
 import ActivityModal from '../../Components/Modals/Activities/ActivityDetails';
 import ActivityCard from '../../Components/Activities/ActivityCard';
 import ActivityFilters from '../../Components/Activities/ActivityFilters';
+import ExportActivitiesModal from '../../Components/Modals/Activities/ExportActivitiesModal';
 
 export default function ActivitiesIndex({ activities, filters }) {
     const safeFilters = (Array.isArray(filters) || !filters) ? {} : filters;
@@ -15,6 +16,7 @@ export default function ActivitiesIndex({ activities, filters }) {
     const [search, setSearch] = useState(safeFilters.search || '');
     const [sort, setSort] = useState(safeFilters.sort || 'date_desc');
     const [selectedActivity, setSelectedActivity] = useState(null);
+    const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
@@ -62,6 +64,13 @@ export default function ActivitiesIndex({ activities, filters }) {
                 />
             )}
 
+            {isExportModalOpen && (
+                <ExportActivitiesModal
+                    onClose={() => setIsExportModalOpen(false)}
+                    filters={{ search, sort }}
+                />
+            )}
+
             <div className="max-w-7xl mx-auto mb-8 flex flex-col lg:flex-row md:items-center justify-between gap-6">
 
                 <div className="flex items-center gap-4">
@@ -77,8 +86,17 @@ export default function ActivitiesIndex({ activities, filters }) {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
-                    <div className="w-full md:w-auto z-20">
-                        <ActivityFilters currentSort={sort} onSortChange={handleSortChange} />
+                    <div className="flex gap-4">
+                         <div className="w-full md:w-auto z-20">
+                            <ActivityFilters currentSort={sort} onSortChange={handleSortChange} />
+                        </div>
+                        <button
+                            onClick={() => setIsExportModalOpen(true)}
+                            className="bg-[#27272a] hover:bg-[#323236] text-white p-3 rounded-xl border border-gray-700 transition-colors flex items-center justify-center cursor-pointer"
+                            title={t('export_btn') || "Exportar"}
+                        >
+                            <Download size={20} />
+                        </button>
                     </div>
 
                     <div className="relative w-full md:w-80 z-10">

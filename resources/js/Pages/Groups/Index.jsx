@@ -10,8 +10,6 @@ export default function GroupsIndex({ myGroups, suggestedGroups }) {
     const { t } = useTranslation();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
-    console.log(myGroups);
-
     return (
         <div className="min-h-screen bg-[#18181b] text-white p-4 md:p-8">
             <Head title={t('community_title')} />
@@ -31,7 +29,7 @@ export default function GroupsIndex({ myGroups, suggestedGroups }) {
                         onClick={() => setIsCreateModalOpen(true)}
                         className="bg-[#FC4C02] hover:bg-[#e34402] text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg shadow-orange-900/20 cursor-pointer"
                     >
-                        <Plus size={20} /> {t('groups_create_btn')} {/* Traduzido */}
+                        <Plus size={20} /> {t('groups_create_btn')}
                     </button>
                 </div>
 

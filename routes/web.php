@@ -3,7 +3,9 @@
 require __DIR__ . '/admin.php';
 
 use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
@@ -49,6 +51,13 @@ Route::middleware('auth.redirect')->group(function () {
 
     // MILESTONES (BADGES AND PERSONAL RECORDS)
     Route::get('/milestones', [MilestonesController::class, 'index'])->name('milestones.index');
+
+
+    // GROUPS AND CHALLENGES
+    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
+    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
+    Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groups.show');
+    Route::post('/groups/{group}/challenges', [ChallengeController::class, 'store'])->name('challenges.store');
 });
 
 Route::middleware('guest.redirect')->group(function () {

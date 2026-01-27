@@ -1,0 +1,110 @@
+import { Head, Link } from '@inertiajs/react';
+import { ArrowLeft } from 'lucide-react';
+import useTranslation from '@/Hooks/useTranslation';
+import { useState } from 'react';
+import CreateChallengeModal from '../../Components/Groups/CreateChallenge';
+import FlashToast from '../../Components/UI/FlashToast';
+import MembersTab from '../../Components/Groups/MembersTab';
+import ChallengesTab from '../../Components/Groups/ChallengesTab';
+
+export default function GroupShow({ auth, group, challenges, canCreateChallenge }) {
+    const { t } = useTranslation();
+    const [activeTab, setActiveTab] = useState('challenges');
+    const [isChallengeModalOpen, setIsChallengeModalOpen] = useState(false);
+
+    return (
+        <div className="min-h-screen bg-[#18181b] text-white">
+            <Head title={group.name} />
+
+            <div className="relative h-76 md:h-80 bg-gray-900 overflow-hidden w-full group-banner">
+
+                <div className="absolute inset-0 z-0">
+                    {group.image_path ? (
+                        <img
+                            src={`/storage/${group.image_path}`}
+                            className="w-full h-full object-cover opacity-60"
+                            alt="Capa do grupo"
+                        />
+                    ) : (
+                        <div className="w-full h-full bg-linear-to-b from-gray-800 to-[#18181b]" />
+                    )}
+                </div>
+
+                <div className="absolute inset-0 bg-linear-to-t from-[#18181b] via-transparent to-black/30 z-0 pointer-events-none" />
+
+                <div className="absolute top-6 left-6 md:left-12 z-20">
+                    <Link href={route('groups.index')} className="bg-black/30 backdrop-blur p-3 rounded-full hover:bg-white/10 text-white transition-colors block">
+                        <ArrowLeft size={24} />
+                    </Link>
+                </div>
+
+                <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10">
+                    <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-6">
+
+                        <div className="w-full">
+                            <span className="bg-[#FC4C02] text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-2 inline-block">
+                                {t('group_label')}
+                            </span>
+                            <h1 className="text-4xl md:text-5xl font-bold mb-2 leading-tight">
+                                {group.name}
+                            </h1>
+                            <p className="text-gray-300 max-w-2xl line-clamp-2 md:line-clamp-none">
+                                {group.description}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center gap-4 shrink-0 pb-1">
+                            <div className="flex -space-x-3">
+                                {group.users.slice(0, 5).map(u => (
+                                    <div key={u.id} className="w-10 h-10 rounded-full border-2 border-[#18181b] bg-gray-700 overflow-hidden">
+                                        <img src={u.avatar || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full object-cover" />
+                                    </div>
+                                ))}
+                                {group.users.length > 5 && (
+                                    <div className="w-10 h-10 rounded-full border-2 border-[#18181b] bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-400">
+                                        +{group.users.length - 5}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto p-6 md:p-12">
+                <div className="flex gap-6 border-b border-gray-800 mb-8">
+                    <button
+                        onClick={() => setActiveTab('challenges')}
+                        className={`pb-4 font-semibold text-sm uppercase tracking-widest transition-colors ${activeTab === 'challenges' ? 'text-[#FC4C02] border-b-2 border-[#FC4C02]' : 'text-gray-500 hover:text-white'} cursor-pointer`}
+                    >
+                        {t('tab_challenges')}
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('members')}
+                        className={`pb-4 font-semibold text-sm uppercase tracking-widest transition-colors ${activeTab === 'members' ? 'text-[#FC4C02] border-b-2 border-[#FC4C02]' : 'text-gray-500 hover:text-white'} cursor-pointer`}
+                    >
+                        {t('tab_members')}
+                    </button>
+                </div>
+
+                {activeTab === 'challenges' && (
+                    <ChallengesTab auth={auth} t={t} challenges={challenges} canCreateChallenge={canCreateChallenge} setIsChallengeModalOpen={setIsChallengeModalOpen} />
+                )}
+
+                {activeTab === 'members' && (
+                    <MembersTab t={t} group={group} />
+                )}
+
+            </div>
+
+            <CreateChallengeModal
+                isOpen={isChallengeModalOpen}
+                onClose={() => setIsChallengeModalOpen(false)}
+                groupId={group.id}
+            />
+
+            <FlashToast />
+        </div>
+    );
+}

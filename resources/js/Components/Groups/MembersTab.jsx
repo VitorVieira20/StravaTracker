@@ -1,0 +1,97 @@
+import { Calendar, Crown, Search, Shield } from "lucide-react";
+import { useState } from "react";
+
+export default function MembersTab({ t, group }) {
+    const [memberSearch, setMemberSearch] = useState("");
+
+    return (
+        <div className="animate-fade-in">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                <div className="relative w-full sm:w-72">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
+                    <input
+                        type="text"
+                        placeholder={t('members_search_placeholder')}
+                        value={memberSearch}
+                        onChange={(e) => setMemberSearch(e.target.value)}
+                        className="w-full bg-[#27272a] border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:ring-2 focus:ring-[#FC4C02] focus:border-transparent outline-none transition-all placeholder-gray-600"
+                    />
+                </div>
+                <p className="text-sm text-gray-400 font-medium">
+                    {group.users.filter(u => u.name.toLowerCase().includes(memberSearch.toLowerCase())).length} {t('members_count_label')}
+                </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                {group.users
+                    .filter(user => user.name.toLowerCase().includes(memberSearch.toLowerCase()))
+                    .sort((a, b) => (a.pivot.role === 'admin' ? -1 : 1))
+                    .map(user => {
+                        const isAdmin = user.pivot.role === 'admin';
+
+                        return (
+                            <div
+                                key={user.id}
+                                className={`
+                                group relative p-4 rounded-xl border transition-all duration-300
+                                ${isAdmin
+                                        ? 'bg-linear-to-br from-[#27272a] to-[#27272a]/50 border-orange-500/20 hover:border-orange-500/40'
+                                        : 'bg-[#27272a] border-gray-800 hover:border-gray-600 hover:bg-[#3f3f46]/30'
+                                    }
+                            `}
+                            >
+                                {isAdmin && (
+                                    <div className="absolute top-3 right-3 text-[#FC4C02]" title={t('members_role_admin')}>
+                                        <Crown size={16} fill="currentColor" className="opacity-80" />
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-4">
+                                    <div className={`relative w-12 h-12 rounded-full overflow-hidden shrink-0 ${isAdmin ? 'ring-2 ring-[#FC4C02] ring-offset-2 ring-offset-[#18181b]' : 'bg-gray-700'}`}>
+                                        <img
+                                            src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    </div>
+
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-bold text-white truncate text-sm md:text-base">
+                                            {user.name}
+                                        </p>
+
+                                        <div className="flex items-center gap-2 mt-0.5">
+                                            {isAdmin ? (
+                                                <span className="flex items-center gap-1 text-[10px] font-bold text-[#FC4C02] uppercase tracking-wider bg-[#FC4C02]/10 px-1.5 py-0.5 rounded-sm">
+                                                    <Shield size={10} /> {t('members_role_admin')}
+                                                </span>
+                                            ) : (
+                                                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider bg-gray-800 px-1.5 py-0.5 rounded-sm">
+                                                    {t('members_role_member')}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {user.pivot.created_at && (
+                                    <div className="mt-4 pt-3 border-t border-white/5 flex items-center gap-2 text-xs text-gray-500">
+                                        <Calendar size={12} />
+                                        <span>
+                                            {t('members_joined_date')} {new Date(user.pivot.created_at).toLocaleDateString('pt-PT', { month: 'short', year: 'numeric' })}
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+            </div>
+
+            {group.users.filter(u => u.name.toLowerCase().includes(memberSearch.toLowerCase())).length === 0 && (
+                <div className="text-center py-12 text-gray-500">
+                    <Search size={32} className="mx-auto mb-3 opacity-20" />
+                    <p>{t('members_empty_state')}</p>
+                </div>
+            )}
+        </div>
+    );
+}

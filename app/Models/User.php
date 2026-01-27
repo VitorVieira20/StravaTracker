@@ -74,4 +74,10 @@ class User extends Authenticatable
             ->withPivot('awarded_at')
             ->withTimestamps();
     }
+
+
+    public function groups()
+    {
+        return $this->belongsToMany(Group::class)->withPivot('role');
+    }
 }

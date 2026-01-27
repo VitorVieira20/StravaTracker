@@ -1,5 +1,5 @@
 import { Link, router } from "@inertiajs/react";
-import { Calendar, MapPin, RefreshCw, Settings, Trophy, Route, Zap, Timer, Tv, LogOut, LayoutList } from "lucide-react";
+import { Calendar, MapPin, RefreshCw, Settings, Trophy, Route, Zap, Timer, Tv, LogOut, LayoutList, Users } from "lucide-react";
 import { useState, useEffect } from "react";
 import useTranslation from '@/Hooks/useTranslation';
 import { route } from "ziggy-js";
@@ -62,6 +62,14 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                             title={t('tip_personal_bests')}
                         >
                             <Trophy size={20} />
+                        </Link>
+
+                        <Link
+                            href={route('groups.index')}
+                            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-gray-800 rounded-full cursor-pointer"
+                            title="Comunidade"
+                        >
+                            <Users size={20} />
                         </Link>
 
                         <Link

@@ -1,4 +1,4 @@
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import useTranslation from '@/Hooks/useTranslation';
 import { useState } from 'react';
@@ -7,16 +7,23 @@ import FlashToast from '../../Components/UI/FlashToast';
 import MembersTab from '../../Components/Groups/MembersTab';
 import ChallengesTab from '../../Components/Groups/ChallengesTab';
 
-export default function GroupShow({ auth, group, challenges, canCreateChallenge }) {
+export default function GroupShow({ auth, group, challenges, membership }) {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('challenges');
     const [isChallengeModalOpen, setIsChallengeModalOpen] = useState(false);
+
+    const { post, delete: destroy } = useForm();
+
+    const activeUsers = group.users.filter(u => u.pivot.status === 'active');
+
+    const handleJoin = () => post(route('groups.join', group.id));
+    const handleLeave = () => destroy(route('groups.leave', group.id));
 
     return (
         <div className="min-h-screen bg-[#18181b] text-white">
             <Head title={group.name} />
 
-            <div className="relative h-76 md:h-80 bg-gray-900 overflow-hidden w-full group-banner">
+            <div className="relative h-92 md:h-80 bg-gray-900 overflow-hidden w-full group-banner">
 
                 <div className="absolute inset-0 z-0">
                     {group.image_path ? (
@@ -40,7 +47,6 @@ export default function GroupShow({ auth, group, challenges, canCreateChallenge 
 
                 <div className="absolute bottom-0 left-0 w-full p-6 md:p-12 z-10">
                     <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-end gap-6">
-
                         <div className="w-full">
                             <span className="bg-[#FC4C02] text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-2 inline-block">
                                 {t('group_label')}
@@ -55,20 +61,49 @@ export default function GroupShow({ auth, group, challenges, canCreateChallenge 
 
                         <div className="flex items-center gap-4 shrink-0 pb-1">
                             <div className="flex -space-x-3">
-                                {group.users.slice(0, 5).map(u => (
+                                {activeUsers.slice(0, 5).map(u => (
                                     <div key={u.id} className="w-10 h-10 rounded-full border-2 border-[#18181b] bg-gray-700 overflow-hidden">
                                         <img src={u.avatar || `https://ui-avatars.com/api/?name=${u.name}&background=random`} className="w-full h-full object-cover" />
                                     </div>
                                 ))}
-                                {group.users.length > 5 && (
+                                {activeUsers.length > 5 && (
                                     <div className="w-10 h-10 rounded-full border-2 border-[#18181b] bg-gray-800 flex items-center justify-center text-xs font-bold text-gray-400">
                                         +{group.users.length - 5}
                                     </div>
                                 )}
                             </div>
                         </div>
-
                     </div>
+                </div>
+            </div>
+
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row p-2 items-center justify-center">
+                <div className="flex gap-3 mt-4">
+                    {!membership.is_member && !membership.is_pending && (
+                        <button
+                            onClick={handleJoin}
+                            className="bg-[#FC4C02] text-white px-6 py-2 rounded-xl font-semibold hover:bg-[#e34402] transition cursor-pointer"
+                        >
+                            {group.privacy === 'private' ? t('btn_request_join') : t('btn_join_group')}
+                        </button>
+                    )}
+
+                    {membership.is_pending && (
+                        <div className="flex items-center gap-3">
+                            <span className="text-yellow-500 font-semibold bg-yellow-500/10 px-3 py-2 rounded-lg">
+                                {t('status_pending_approval')}
+                            </span>
+                            <button onClick={handleLeave} className="text-gray-400 hover:text-white underline text-md cursor-pointer">
+                                {t('btn_cancel_request')}
+                            </button>
+                        </div>
+                    )}
+
+                    {membership.is_member && (
+                        <button onClick={handleLeave} className="border border-gray-600 text-gray-300 px-4 py-2 rounded-xl font-bold hover:bg-white/10 hover:text-white transition text-sm cursor-pointer">
+                            {t('btn_leave_group')}
+                        </button>
+                    )}
                 </div>
             </div>
 
@@ -89,11 +124,11 @@ export default function GroupShow({ auth, group, challenges, canCreateChallenge 
                 </div>
 
                 {activeTab === 'challenges' && (
-                    <ChallengesTab auth={auth} t={t} challenges={challenges} canCreateChallenge={canCreateChallenge} setIsChallengeModalOpen={setIsChallengeModalOpen} />
+                    <ChallengesTab auth={auth} t={t} challenges={challenges} membership={membership} setIsChallengeModalOpen={setIsChallengeModalOpen} />
                 )}
 
                 {activeTab === 'members' && (
-                    <MembersTab t={t} group={group} />
+                    <MembersTab t={t} group={group} membership={membership} />
                 )}
 
             </div>

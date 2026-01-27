@@ -10,6 +10,7 @@ export default function CreateGroupModal({ isOpen, onClose }) {
     const { data, setData, post, processing, errors, clearErrors, reset } = useForm({
         name: '',
         description: '',
+        privacy: 'private',
         image: null,
     });
 
@@ -88,19 +89,60 @@ export default function CreateGroupModal({ isOpen, onClose }) {
                     </div>
 
                     <div>
+                        <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                            {t('groups_privacy_label')}
+                        </label>
+                        <div className="flex gap-4">
+                            <label className={`flex-1 p-4 rounded-xl border cursor-pointer transition-all ${data.privacy === 'public' ? 'border-[#FC4C02] bg-[#FC4C02]/10' : 'border-gray-700 bg-[#27272a]'}`}>
+                                <input
+                                    type="radio"
+                                    name="privacy"
+                                    value="public"
+                                    checked={data.privacy === 'public'}
+                                    onChange={e => setData('privacy', e.target.value)}
+                                    className="hidden"
+                                />
+                                <div className="font-bold text-white">
+                                    {t('groups_privacy_public_title')}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                    {t('groups_privacy_public_desc')}
+                                </div>
+                            </label>
+
+                            <label className={`flex-1 p-4 rounded-xl border cursor-pointer transition-all ${data.privacy === 'private' ? 'border-[#FC4C02] bg-[#FC4C02]/10' : 'border-gray-700 bg-[#27272a]'}`}>
+                                <input
+                                    type="radio"
+                                    name="privacy"
+                                    value="private"
+                                    checked={data.privacy === 'private'}
+                                    onChange={e => setData('privacy', e.target.value)}
+                                    className="hidden"
+                                />
+                                <div className="font-bold text-white">
+                                    {t('groups_privacy_private_title')}
+                                </div>
+                                <div className="text-xs text-gray-400">
+                                    {t('groups_privacy_private_desc')}
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
                         <label className="block text-xs font-bold text-gray-500 uppercase mb-1">{t('groups_cover_label')}</label>
-                        
+
                         <div className="relative">
                             {preview ? (
                                 <div className="relative w-full h-48 rounded-xl overflow-hidden border border-gray-700 group">
-                                    <img 
-                                        src={preview} 
-                                        alt="Preview" 
-                                        className="w-full h-full object-cover" 
+                                    <img
+                                        src={preview}
+                                        alt="Preview"
+                                        className="w-full h-full object-cover"
                                     />
-                                    
+
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-4">
-                                        <button 
+                                        <button
                                             type="button"
                                             onClick={removeImage}
                                             className="bg-red-500/80 hover:bg-red-600 text-white p-2 rounded-full backdrop-blur-sm transition-transform hover:scale-110 cursor-pointer"

@@ -1,4 +1,4 @@
-import { Users, Trophy } from 'lucide-react';
+import { Users, Trophy, Lock, Globe } from 'lucide-react'; // <--- Importar Lock e Globe
 import { Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import useTranslation from '@/Hooks/useTranslation';
@@ -20,6 +20,20 @@ export default function GroupCard({ group }) {
                     </div>
                 )}
 
+                <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg flex items-center gap-1.5 text-xs font-bold text-white border border-white/10 shadow-lg">
+                    {group.privacy === 'private' ? (
+                        <>
+                            <Lock size={12} className="text-yellow-500" />
+                            <span className="text-[10px] uppercase tracking-wider opacity-80">{t('groups_privacy_private_title')}</span>
+                        </>
+                    ) : (
+                        <>
+                            <Globe size={12} className="text-blue-400" />
+                            <span className="text-[10px] uppercase tracking-wider opacity-80">{t('groups_privacy_public_title')}</span>
+                        </>
+                    )}
+                </div>
+
                 <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-2 text-xs font-bold text-white border border-white/10">
                     <Users size={12} className="text-[#FC4C02]" />
                     {group.users_count || 0}
@@ -31,13 +45,13 @@ export default function GroupCard({ group }) {
                     {group.name}
                 </h3>
                 <p className="text-gray-400 text-sm line-clamp-2 mb-4 h-10">
-                    {group.description || t('groups_no_description')} {/* Traduzido */}
+                    {group.description || t('groups_no_description')}
                 </p>
 
                 <div className="flex items-center justify-between border-t border-gray-700/50 pt-4 mt-2">
                     <div className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
                         <Trophy size={14} className="text-yellow-500" />
-                        <span>{group.challenges_count || 0} {t('groups_active_challenges')}</span> {/* Traduzido */}
+                        <span>{group.challenges_count || 0} {t('groups_active_challenges')}</span>
                     </div>
                 </div>
             </div>

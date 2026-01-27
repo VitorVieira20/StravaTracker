@@ -11,12 +11,13 @@ class Group extends Model
         'description',
         'owner_id',
         'image_path',
+        'privacy',
     ];
 
 
     public function users()
     {
-        return $this->belongsToMany(User::class)->withPivot('role');
+        return $this->belongsToMany(User::class)->withPivot('role', 'status');
     }
 
     

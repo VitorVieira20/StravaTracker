@@ -25,6 +25,7 @@ class CreateGroupRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:1000',
+            'privacy' => 'required|in:public,private',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ];
     }
@@ -38,6 +39,8 @@ class CreateGroupRequest extends FormRequest
             'name.max' => __('groups_validation_name_max'),
             'description.string' => __('groups_validation_description_string'),
             'description.max' => __('groups_validation_description_max'),
+            'privacy.required' => __('groups_validation_privacy_required'),
+            'privacy.in' => __('groups_validation_privacy_in'),
             'image.image' => __('groups_validation_image_file'),
             'image.mimes' => __('groups_validation_image_mimes'),
             'image.max' => __('groups_validation_image_max'),

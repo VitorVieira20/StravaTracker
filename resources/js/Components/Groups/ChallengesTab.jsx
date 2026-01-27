@@ -1,11 +1,11 @@
 import { Plus, Trophy } from "lucide-react";
 import ChallengeCard from "./ChallengeCard";
 
-export default function ChallengesTab({ auth, t, challenges, canCreateChallenge, setIsChallengeModalOpen }) {
+export default function ChallengesTab({ auth, t, challenges, membership, setIsChallengeModalOpen }) {
 
     return (
         <div>
-            {canCreateChallenge &&
+            {membership.is_admin &&
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-xl font-bold">{t('groups_active_challenges_title')}</h2>
                     <button

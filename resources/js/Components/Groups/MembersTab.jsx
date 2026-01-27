@@ -1,11 +1,54 @@
+import { router } from "@inertiajs/react";
 import { Calendar, Crown, Search, Shield } from "lucide-react";
 import { useState } from "react";
+import { route } from "ziggy-js";
 
-export default function MembersTab({ t, group }) {
+export default function MembersTab({ t, group, membership }) {
     const [memberSearch, setMemberSearch] = useState("");
+
+    const pendingUsers = group.users.filter(u => u.pivot.status === 'pending');
+    const activeUsers = group.users.filter(u => u.pivot.status === 'active');
+
+    const handleApprove = (userId) => {
+        router.post(route('groups.members.approve', [group.id, userId]));
+    };
+
+    const handleReject = (userId) => {
+        router.delete(route('groups.members.remove', [group.id, userId]));
+    };
 
     return (
         <div className="animate-fade-in">
+            {membership.is_admin && pendingUsers.length > 0 && (
+                <div className="mb-10 p-6 bg-yellow-500/5 border border-yellow-500/20 rounded-2xl">
+                    <h3 className="text-yellow-500 font-bold uppercase tracking-wider mb-4 text-sm flex items-center gap-2">
+                        {t('groups_waitlist_label')} ({pendingUsers.length})
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {pendingUsers.map(user => (
+                            <div key={user.id} className="flex items-center justify-between bg-[#18181b] p-3 rounded-xl border border-gray-800">
+                                <div className="flex items-center gap-3">
+                                    <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0">
+                                        <img
+                                            src={user.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=random`}
+                                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                        />
+                                    </div>
+                                    <span className="font-bold">{user.name}</span>
+                                </div>
+                                <div className="flex gap-2">
+                                    <button onClick={() => handleApprove(user.id)} className="p-2 bg-green-500/20 text-green-500 rounded-lg hover:bg-green-500 hover:text-white transition cursor-pointer" title={t('groups_btn_accept')}>
+                                        {t('groups_btn_accept')}
+                                    </button>
+                                    <button onClick={() => handleReject(user.id)} className="p-2 bg-red-500/20 text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition cursor-pointer" title={t('groups_btn_reject')}>
+                                        {t('groups_btn_reject')}
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                 <div className="relative w-full sm:w-72">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
@@ -18,12 +61,12 @@ export default function MembersTab({ t, group }) {
                     />
                 </div>
                 <p className="text-sm text-gray-400 font-medium">
-                    {group.users.filter(u => u.name.toLowerCase().includes(memberSearch.toLowerCase())).length} {t('members_count_label')}
+                    {activeUsers.filter(u => u.name.toLowerCase().includes(memberSearch.toLowerCase())).length} {t('members_count_label')}
                 </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {group.users
+                {activeUsers
                     .filter(user => user.name.toLowerCase().includes(memberSearch.toLowerCase()))
                     .sort((a, b) => (a.pivot.role === 'admin' ? -1 : 1))
                     .map(user => {
@@ -86,7 +129,7 @@ export default function MembersTab({ t, group }) {
                     })}
             </div>
 
-            {group.users.filter(u => u.name.toLowerCase().includes(memberSearch.toLowerCase())).length === 0 && (
+            {activeUsers.filter(u => u.name.toLowerCase().includes(memberSearch.toLowerCase())).length === 0 && (
                 <div className="text-center py-12 text-gray-500">
                     <Search size={32} className="mx-auto mb-3 opacity-20" />
                     <p>{t('members_empty_state')}</p>

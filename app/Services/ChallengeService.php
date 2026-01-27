@@ -13,7 +13,9 @@ class ChallengeService
 {
     public function getLeaderboard(Challenge $challenge)
     {
-        $memberIds = $challenge->group->users()->pluck('users.id');
+        $memberIds = $challenge->group->users()
+            ->wherePivot('status', 'active')
+            ->pluck('users.id');
 
         $column = match ($challenge->type) {
             'total_distance' => 'distance',

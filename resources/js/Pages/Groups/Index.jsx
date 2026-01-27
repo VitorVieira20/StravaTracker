@@ -1,12 +1,12 @@
 import { Head, Link } from '@inertiajs/react';
-import { Plus, Users, Search, ArrowLeft } from 'lucide-react';
+import { Plus, Users, Search, ArrowLeft, Clock } from 'lucide-react';
 import useTranslation from '@/Hooks/useTranslation';
 import GroupCard from '@/Components/Groups/GroupCard';
 import CreateGroupModal from '@/Components/Modals/Groups/CreateGroup';
 import { useState } from 'react';
 import FlashToast from '../../Components/UI/FlashToast';
 
-export default function GroupsIndex({ myGroups, suggestedGroups }) {
+export default function GroupsIndex({ myGroups, pendingGroups, suggestedGroups }) {
     const { t } = useTranslation();
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
@@ -33,6 +33,27 @@ export default function GroupsIndex({ myGroups, suggestedGroups }) {
                     </button>
                 </div>
 
+                {pendingGroups && pendingGroups.length > 0 && (
+                    <div className="mb-12 animate-fade-in">
+                        <div className="flex items-center gap-2 mb-6">
+                            <Clock size={20} className="text-yellow-500" />
+                            <h2 className="text-xl font-semibold uppercase tracking-wide text-yellow-500">
+                                {t('groups_pending_requests') || "Pending Requests"}
+                            </h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-75 hover:opacity-100 transition-opacity">
+                            {pendingGroups.map(group => (
+                                <div key={group.id} className="relative">
+                                    <div className="absolute -top-2.5 right-4 z-10 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full shadow-lg uppercase tracking-wider">
+                                        {t('groups_status_pending') || "Pending"}
+                                    </div>
+                                    <GroupCard group={group} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 <div className="mb-12">
                     <div className="flex items-center gap-2 mb-6">
                         <Users size={20} className="text-[#FC4C02]" />
@@ -45,7 +66,7 @@ export default function GroupsIndex({ myGroups, suggestedGroups }) {
                         </div>
                     ) : (
                         <div className="bg-[#27272a] rounded-3xl p-8 text-center border border-gray-800 border-dashed">
-                            <p className="text-gray-500 mb-4">{t('groups_empty_state')}</p> {/* Traduzido */}
+                            <p className="text-gray-500 mb-4">{t('groups_empty_state')}</p>
                             <button onClick={() => setIsCreateModalOpen(true)} className="text-[#FC4C02] font-bold hover:underline">
                                 {t('groups_create_first')}
                             </button>
@@ -53,15 +74,17 @@ export default function GroupsIndex({ myGroups, suggestedGroups }) {
                     )}
                 </div>
 
-                <div>
-                    <div className="flex items-center gap-2 mb-6">
-                        <Search size={20} className="text-gray-400" />
-                        <h2 className="text-xl font-semibold uppercase tracking-wide text-gray-400">{t('groups_discover')}</h2>
+                {suggestedGroups.length > 0 &&
+                    <div>
+                        <div className="flex items-center gap-2 mb-6">
+                            <Search size={20} className="text-gray-400" />
+                            <h2 className="text-xl font-semibold uppercase tracking-wide text-gray-400">{t('groups_discover')}</h2>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-80 hover:opacity-100 transition-opacity">
+                            {suggestedGroups.map(group => <GroupCard key={group.id} group={group} />)}
+                        </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-80 hover:opacity-100 transition-opacity">
-                        {suggestedGroups.map(group => <GroupCard key={group.id} group={group} />)}
-                    </div>
-                </div>
+                }
             </div>
 
             <CreateGroupModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />

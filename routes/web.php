@@ -57,6 +57,10 @@ Route::middleware('auth.redirect')->group(function () {
     Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
     Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
     Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groups.show');
+    Route::post('/groups/{group}/join', [GroupController::class, 'join'])->name('groups.join');
+    Route::delete('/groups/{group}/leave', [GroupController::class, 'leave'])->name('groups.leave');
+    Route::post('/groups/{group}/members/{user}/approve', [GroupController::class, 'approve'])->name('groups.members.approve');
+    Route::delete('/groups/{group}/members/{user}/remove', [GroupController::class, 'remove'])->name('groups.members.remove');
     Route::post('/groups/{group}/challenges', [ChallengeController::class, 'store'])->name('challenges.store');
 });
 

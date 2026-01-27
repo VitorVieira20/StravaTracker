@@ -323,5 +323,16 @@
     "groups_privacy_private_desc": "Admin approval required.",
     "groups_waitlist_label": "Waitlist / Pending Requests",
     "groups_btn_accept": "Accept",
-    "groups_btn_reject": "Reject"
+    "groups_btn_reject": "Reject",
+    "groups_leave_confirm": "Are you sure you want to leave? If you are the last member, the group will be deleted.",
+    "groups_leave_promote_title": "Appoint a New Leader",
+    "groups_leave_promote_desc": "As the only admin, you must appoint another member as admin before leaving.",
+    "btn_promote_and_leave": "Promote & Leave",
+    "groups_messages_group_deleted": "Group deleted as you were the last member.",
+    "groups_validation_admin_successor_required": "A successor is required.",
+    "groups_validation_invalid_member": "Invalid member selected.",
+    "groups_btn_kick": "Kick Member",
+    "groups_kick_title": "Kick Member?",
+    "groups_kick_confirm_desc": "Are you sure you want to remove this member? They will need to request to join again.",
+    "groups_validation_cannot_kick_owner": "Cannot kick the group owner."
 }

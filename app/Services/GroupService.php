@@ -124,9 +124,47 @@ class GroupService
     }
 
 
-    public function leaveGroup(Group $group, User $user): void
+    public function leaveGroup(Group $group, User $user, ?int $newAdminId = null): array
     {
+        $membersCount = $group->users()->count();
+
+        if ($membersCount <= 1) {
+            $group->delete();
+            return ['type' => 'success', 'message' => __('groups_messages_group_deleted')];
+        }
+
+        $isCurrentAdmin = $group->users()
+            ->where('user_id', $user->id)
+            ->wherePivot('role', 'admin')
+            ->exists();
+
+        if ($isCurrentAdmin) {
+            $otherAdminsCount = $group->users()
+                ->wherePivot('role', 'admin')
+                ->where('users.id', '!=', $user->id)
+                ->count();
+
+            if ($otherAdminsCount === 0) {
+                if (!$newAdminId) {
+                    return ['type' => 'error', 'code' => 'needs_successor', 'message' => __('groups_validation_admin_successor_required')];
+                }
+
+                $isValidMember = $group->users()
+                    ->where('user_id', $newAdminId)
+                    ->where('users.id', '!=', $user->id)
+                    ->exists();
+
+                if (!$isValidMember) {
+                    return ['type' => 'error', 'message' => __('groups_validation_invalid_member')];
+                }
+
+                $group->users()->updateExistingPivot($newAdminId, ['role' => 'admin']);
+            }
+        }
+
         $group->users()->detach($user->id);
+
+        return ['type' => 'success', 'message' => __('groups_messages_leave_success')];
     }
 
 
@@ -136,8 +174,14 @@ class GroupService
     }
 
 
-    public function removeMember(Group $group, int $userId): void
+    public function removeMember(Group $group, int $userId): array
     {
+        if ($group->owner_id === $userId) {
+            return ['type' => 'error', 'message' => __('groups_validation_cannot_kick_owner')];
+        }
+
         $group->users()->detach($userId);
+
+        return ['type' => 'success', 'message' => __('groups_messages_remove_success')];
     }
 }

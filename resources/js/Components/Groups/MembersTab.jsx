@@ -1,10 +1,15 @@
 import { router } from "@inertiajs/react";
-import { Calendar, Crown, Search, Shield } from "lucide-react";
+import { Calendar, Crown, Search, Shield, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { route } from "ziggy-js";
+import KickMemberModal from "../Modals/Groups/KickMember";
 
-export default function MembersTab({ t, group, membership }) {
+export default function MembersTab({ auth, t, group, membership }) {
     const [memberSearch, setMemberSearch] = useState("");
+    const [userToKick, setUserToKick] = useState(null);
+    const [isKickModalOpen, setIsKickModalOpen] = useState(false);
+    const [processingKick, setProcessingKick] = useState(false);
+
 
     const pendingUsers = group.users.filter(u => u.pivot.status === 'pending');
     const activeUsers = group.users.filter(u => u.pivot.status === 'active');
@@ -15,6 +20,28 @@ export default function MembersTab({ t, group, membership }) {
 
     const handleReject = (userId) => {
         router.delete(route('groups.members.remove', [group.id, userId]));
+    };
+
+    const openKickModal = (user) => {
+        setUserToKick(user);
+        setIsKickModalOpen(true);
+    };
+
+    // NOVA: Função para confirmar a expulsão
+    const handleConfirmKick = () => {
+        if (!userToKick) return;
+        setProcessingKick(true);
+
+        router.delete(route('groups.members.remove', [group.id, userToKick.id]), {
+            onSuccess: () => {
+                setIsKickModalOpen(false);
+                setUserToKick(null);
+                setProcessingKick(false);
+            },
+            onError: () => {
+                setProcessingKick(false);
+            }
+        });
     };
 
     return (
@@ -71,6 +98,14 @@ export default function MembersTab({ t, group, membership }) {
                     .sort((a, b) => (a.pivot.role === 'admin' ? -1 : 1))
                     .map(user => {
                         const isAdmin = user.pivot.role === 'admin';
+                        const isMe = user.id === auth.user.id;
+                        const isOwner = group.owner_id === user.id;
+
+                        // Só posso expulsar se:
+                        // 1. Eu for Admin
+                        // 2. O alvo não for eu mesmo
+                        // 3. O alvo não for o Dono do grupo
+                        const canKick = membership.is_admin && !isMe && !isOwner;
 
                         return (
                             <div
@@ -83,7 +118,22 @@ export default function MembersTab({ t, group, membership }) {
                                     }
                             `}
                             >
-                                {isAdmin && (
+                                {canKick && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            openKickModal(user);
+                                        }}
+                                        className="absolute top-1 right-1 text-red-500 hover:text-red-600 transition-colors p-1 z-10 
+                                                opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 
+                                                bg-[#27272a]/80 lg:bg-transparent backdrop-blur-sm lg:backdrop-blur-none rounded-full cursor-pointer"
+                                        title={t('groups_btn_kick')}
+                                    >
+                                        <Trash2 size={18} /> 
+                                    </button>
+                                )}
+
+                                {isAdmin && !canKick && (
                                     <div className="absolute top-3 right-3 text-[#FC4C02]" title={t('members_role_admin')}>
                                         <Crown size={16} fill="currentColor" className="opacity-80" />
                                     </div>
@@ -135,6 +185,15 @@ export default function MembersTab({ t, group, membership }) {
                     <p>{t('members_empty_state')}</p>
                 </div>
             )}
+
+            <KickMemberModal
+                isOpen={isKickModalOpen}
+                onClose={() => setIsKickModalOpen(false)}
+                onConfirm={handleConfirmKick}
+                user={userToKick}
+                processing={processingKick}
+                t={t}
+            />
         </div>
     );
 }

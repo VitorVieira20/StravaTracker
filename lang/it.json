@@ -323,5 +323,16 @@
     "groups_privacy_private_desc": "Richiede approvazione dell'amministratore.",
     "groups_waitlist_label": "Lista d'attesa / Richieste",
     "groups_btn_accept": "Accetta",
-    "groups_btn_reject": "Rifiuta"
+    "groups_btn_reject": "Rifiuta",
+    "groups_leave_confirm": "Sei sicuro di voler uscire? Se sei l'ultimo membro, il gruppo verrà eliminato.",
+    "groups_leave_promote_title": "Nomina un Nuovo Leader",
+    "groups_leave_promote_desc": "Come unico amministratore, devi nominare un altro membro come amministratore prima di uscire.",
+    "btn_promote_and_leave": "Promuovi ed Esci",
+    "groups_messages_group_deleted": "Gruppo eliminato poiché eri l'ultimo membro.",
+    "groups_validation_admin_successor_required": "È necessario un successore.",
+    "groups_validation_invalid_member": "Membro selezionato non valido.",
+    "groups_btn_kick": "Espelli Membro",
+    "groups_kick_title": "Espelli Membro?",
+    "groups_kick_confirm_desc": "Sei sicuro di voler rimuovere questo membro? Dovrà richiedere di unirsi di nuovo.",
+    "groups_validation_cannot_kick_owner": "Impossibile espellere il proprietario del gruppo."
 }

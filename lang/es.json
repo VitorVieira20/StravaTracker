@@ -323,5 +323,16 @@
     "groups_privacy_private_desc": "Requiere aprobación del administrador.",
     "groups_waitlist_label": "Lista de Espera / Solicitudes",
     "groups_btn_accept": "Aceptar",
-    "groups_btn_reject": "Rechazar"
+    "groups_btn_reject": "Rechazar",
+    "groups_leave_confirm": "¿Estás seguro de que quieres salir? Si eres el último miembro, el grupo será eliminado.",
+    "groups_leave_promote_title": "Nombrar un Nuevo Líder",
+    "groups_leave_promote_desc": "Como único administrador, debes nombrar a otro miembro como administrador antes de salir.",
+    "btn_promote_and_leave": "Promover y Salir",
+    "groups_messages_group_deleted": "Grupo eliminado porque eras el último miembro.",
+    "groups_validation_admin_successor_required": "Se requiere un sucesor.",
+    "groups_validation_invalid_member": "Miembro seleccionado inválido.",
+    "groups_btn_kick": "Expulsar Miembro",
+    "groups_kick_title": "¿Expulsar Miembro?",
+    "groups_kick_confirm_desc": "¿Estás seguro de que quieres eliminar a este miembro? Tendrá que solicitar unirse de nuevo.",
+    "groups_validation_cannot_kick_owner": "No se puede expulsar al dueño del grupo."
 }

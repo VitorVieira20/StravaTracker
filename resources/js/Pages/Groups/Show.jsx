@@ -6,18 +6,44 @@ import CreateChallengeModal from '../../Components/Groups/CreateChallenge';
 import FlashToast from '../../Components/UI/FlashToast';
 import MembersTab from '../../Components/Groups/MembersTab';
 import ChallengesTab from '../../Components/Groups/ChallengesTab';
+import LeaveGroupModal from '../../Components/Modals/Groups/LeaveGroup';
+import ConfirmLeaveModal from '../../Components/Modals/Groups/ConfirmLeave';
 
 export default function GroupShow({ auth, group, challenges, membership }) {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('challenges');
     const [isChallengeModalOpen, setIsChallengeModalOpen] = useState(false);
+    const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
-    const { post, delete: destroy } = useForm();
+    const { post, delete: destroy, processing } = useForm();
 
     const activeUsers = group.users.filter(u => u.pivot.status === 'active');
 
     const handleJoin = () => post(route('groups.join', group.id));
     const handleLeave = () => destroy(route('groups.leave', group.id));
+
+    const handleLeaveClick = () => {
+        const myId = auth.user.id;
+        const isAdmin = membership.is_admin;
+
+        const adminCount = activeUsers.filter(u => u.pivot.role === 'admin').length;
+        const memberCount = activeUsers.length;
+
+        if (isAdmin && adminCount === 1 && memberCount > 1) {
+            setIsLeaveModalOpen(true);
+        } else {
+            setIsConfirmModalOpen(true);
+        }
+    };
+
+    const handleConfirmLeave = () => {
+        destroy(route('groups.leave', group.id), {
+            onSuccess: () => setIsConfirmModalOpen(false),
+            onError: () => setIsConfirmModalOpen(false),
+        });
+    };
+
 
     return (
         <div className="min-h-screen bg-[#18181b] text-white">
@@ -100,7 +126,10 @@ export default function GroupShow({ auth, group, challenges, membership }) {
                     )}
 
                     {membership.is_member && (
-                        <button onClick={handleLeave} className="border border-gray-600 text-gray-300 px-4 py-2 rounded-xl font-bold hover:bg-white/10 hover:text-white transition text-sm cursor-pointer">
+                        <button
+                            onClick={handleLeaveClick}
+                            className="border border-gray-600 text-gray-300 px-4 py-2 rounded-xl font-bold hover:bg-white/10 hover:text-white transition text-sm cursor-pointer"
+                        >
                             {t('btn_leave_group')}
                         </button>
                     )}
@@ -128,7 +157,7 @@ export default function GroupShow({ auth, group, challenges, membership }) {
                 )}
 
                 {activeTab === 'members' && (
-                    <MembersTab t={t} group={group} membership={membership} />
+                    <MembersTab auth={auth} t={t} group={group} membership={membership} />
                 )}
 
             </div>
@@ -137,6 +166,22 @@ export default function GroupShow({ auth, group, challenges, membership }) {
                 isOpen={isChallengeModalOpen}
                 onClose={() => setIsChallengeModalOpen(false)}
                 groupId={group.id}
+            />
+
+            <LeaveGroupModal
+                isOpen={isLeaveModalOpen}
+                onClose={() => setIsLeaveModalOpen(false)}
+                group={group}
+                users={activeUsers.filter(u => u.id !== auth.user.id)}
+                t={t}
+            />
+
+            <ConfirmLeaveModal
+                isOpen={isConfirmModalOpen}
+                onClose={() => setIsConfirmModalOpen(false)}
+                onConfirm={handleConfirmLeave}
+                processing={processing}
+                t={t}
             />
 
             <FlashToast />

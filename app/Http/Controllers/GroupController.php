@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Group\CreateGroupRequest;
 use App\Models\Group;
 use App\Models\User;
-use App\Services\ChallengeService;
 use App\Services\GroupService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -76,10 +75,24 @@ class GroupController extends Controller
     }
 
 
-    public function leave(Group $group)
+    public function leave(Request $request, Group $group)
     {
-        $this->groupService->leaveGroup($group, Auth::user());
-        return redirect()->route('groups.index')->with('success', __('groups_messages_leave_success'));
+        // Validar opcionalmente o new_admin_id
+        $request->validate([
+            'new_admin_id' => 'nullable|exists:users,id'
+        ]);
+
+        $newAdminId = $request->input('new_admin_id');
+
+        $result = $this->groupService->leaveGroup($group, Auth::user(), $newAdminId);
+
+        // Se o grupo foi eliminado ou saiu com sucesso
+        if ($result['type'] === 'success') {
+            return redirect()->route('groups.index')->with('success', $result['message']);
+        }
+
+        // Se houve erro (ex: precisa de sucessor)
+        return back()->with('error', $result['message']);
     }
 
 
@@ -91,7 +104,7 @@ class GroupController extends Controller
 
     public function remove(Group $group, User $user)
     {
-        $this->groupService->removeMember($group, $user->id);
-        return back()->with('success', __('groups_messages_remove_success'));
+        $result = $this->groupService->removeMember($group, $user->id);
+        return back()->with($result['type'], $result['message']);
     }
 }

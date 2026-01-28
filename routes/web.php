@@ -11,6 +11,7 @@ use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RaceGoalController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\StravaAuthController;
 use App\Http\Controllers\SupportController;
 use Illuminate\Support\Facades\Route;
@@ -65,7 +66,12 @@ Route::middleware('auth.redirect')->group(function () {
 });
 
 Route::middleware('guest.redirect')->group(function () {
-    Route::get('/', [StravaAuthController::class, 'index'])->name('strava.index');
+    Route::get('/', [StaticPageController::class, 'welcome'])->name('welcome');
+    Route::get('/features', [StaticPageController::class, 'features'])->name('features');
+    Route::get('/privacy', [StaticPageController::class, 'privacy'])->name('privacy');
+    Route::get('/terms', [StaticPageController::class, 'terms'])->name('terms');
+
+    Route::get('/connect', [StravaAuthController::class, 'index'])->name('strava.index');
 
     // STRAVA OAUTH AUTHENTICATION
     Route::get('/auth/strava/redirect', [StravaAuthController::class, 'redirect'])->name('strava.redirect');

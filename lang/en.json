@@ -334,5 +334,10 @@
     "groups_btn_kick": "Kick Member",
     "groups_kick_title": "Kick Member?",
     "groups_kick_confirm_desc": "Are you sure you want to remove this member? They will need to request to join again.",
-    "groups_validation_cannot_kick_owner": "Cannot kick the group owner."
+    "groups_validation_cannot_kick_owner": "Cannot kick the group owner.",
+    "groups_tab_my_groups": "My Groups",
+    "groups_tab_discover": "Discover",
+    "groups_empty_state_desc": "It looks like you haven't joined or created any groups yet. Start your own community!",
+    "groups_no_suggestions_title": "No Suggestions",
+    "groups_no_suggestions_desc": "There are no public groups to suggest at the moment. Why not create one?"
 }

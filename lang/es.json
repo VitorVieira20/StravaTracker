@@ -334,5 +334,10 @@
     "groups_btn_kick": "Expulsar Miembro",
     "groups_kick_title": "¿Expulsar Miembro?",
     "groups_kick_confirm_desc": "¿Estás seguro de que quieres eliminar a este miembro? Tendrá que solicitar unirse de nuevo.",
-    "groups_validation_cannot_kick_owner": "No se puede expulsar al dueño del grupo."
+    "groups_validation_cannot_kick_owner": "No se puede expulsar al dueño del grupo.",
+    "groups_tab_my_groups": "Mis Grupos",
+    "groups_tab_discover": "Descubrir",
+    "groups_empty_state_desc": "Parece que aún no te has unido o creado ningún grupo. ¡Crea tu propia comunidad!",
+    "groups_no_suggestions_title": "Sin Sugerencias",
+    "groups_no_suggestions_desc": "Por el momento no hay grupos públicos para sugerir. ¿Por qué no creas uno?"
 }

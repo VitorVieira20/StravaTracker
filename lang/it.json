@@ -334,5 +334,10 @@
     "groups_btn_kick": "Espelli Membro",
     "groups_kick_title": "Espelli Membro?",
     "groups_kick_confirm_desc": "Sei sicuro di voler rimuovere questo membro? Dovrà richiedere di unirsi di nuovo.",
-    "groups_validation_cannot_kick_owner": "Impossibile espellere il proprietario del gruppo."
+    "groups_validation_cannot_kick_owner": "Impossibile espellere il proprietario del gruppo.",
+    "groups_tab_my_groups": "I Miei Gruppi",
+    "groups_tab_discover": "Scopri",
+    "groups_empty_state_desc": "Sembra che tu non ti sia ancora unito o abbia creato alcun gruppo. Inizia la tua community!",
+    "groups_no_suggestions_title": "Nessun suggerimento",
+    "groups_no_suggestions_desc": "Al momento non ci sono gruppi pubblici da suggerire. Perché non ne crei uno?"
 }

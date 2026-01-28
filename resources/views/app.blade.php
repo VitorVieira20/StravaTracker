@@ -11,6 +11,9 @@
     <meta name="author" content="Vitor Vieira Web Developer">
 
     <link rel="icon" type="image/png" href="{{ asset('logo.png') }}" />
+    <link rel="preload" as="image" href="{{ asset('images/screenshots/slide_history.png') }}">
+    <link rel="preload" as="image" href="{{ asset( 'images/screenshots/slide_last_run.png')}}">
+    <link rel="preload" as="image" href="{{ asset('images/screenshots/slide_volume.png') }}">
 
     <meta name="theme-color" content="#ffffff">
     <link rel="preload" as="style"

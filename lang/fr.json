@@ -339,5 +339,17 @@
     "groups_tab_discover": "Découvrir",
     "groups_empty_state_desc": "Il semble que vous n'ayez pas encore rejoint ou créé de groupe. Lancez votre propre communauté !",
     "groups_no_suggestions_title": "Aucune suggestion",
-    "groups_no_suggestions_desc": "Pour le moment, il n'y a aucun groupe public à suggérer. Pourquoi ne pas en créer un ?"
+    "groups_no_suggestions_desc": "Pour le moment, il n'y a aucun groupe public à suggérer. Pourquoi ne pas en créer un ?",
+    "hall_of_fame_title": "Hall of Fame",
+    "wins_label": "Victoires",
+    "tab_active": "Actifs",
+    "tab_history": "Historique",
+    "groups_no_past_challenges": "Il n'y a pas encore de défis terminés.",
+    "status_ended": "Terminé",
+    "winner_label": "Vainqueur",
+    "challenge_ended_at": "Terminé le",
+    "challenges_search_placeholder": "Rechercher des défis...",
+    "filter_all_types": "Tous les Types",
+    "challenges_no_results": "Aucun défi trouvé avec ces filtres.",
+    "btn_clear_filters": "Effacer les filtres"
 }

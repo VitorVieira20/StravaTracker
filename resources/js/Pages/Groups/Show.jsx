@@ -9,7 +9,7 @@ import ChallengesTab from '../../Components/Groups/ChallengesTab';
 import LeaveGroupModal from '../../Components/Modals/Groups/LeaveGroup';
 import ConfirmLeaveModal from '../../Components/Modals/Groups/ConfirmLeave';
 
-export default function GroupShow({ auth, group, challenges, membership }) {
+export default function GroupShow({ auth, group, challenges, pastChallenges, hallOfFame, membership }) {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('challenges');
     const [isChallengeModalOpen, setIsChallengeModalOpen] = useState(false);
@@ -153,7 +153,7 @@ export default function GroupShow({ auth, group, challenges, membership }) {
                 </div>
 
                 {activeTab === 'challenges' && (
-                    <ChallengesTab auth={auth} t={t} challenges={challenges} membership={membership} setIsChallengeModalOpen={setIsChallengeModalOpen} />
+                    <ChallengesTab auth={auth} t={t} challenges={challenges} pastChallenges={pastChallenges} hallOfFame={hallOfFame} membership={membership} setIsChallengeModalOpen={setIsChallengeModalOpen} />
                 )}
 
                 {activeTab === 'members' && (

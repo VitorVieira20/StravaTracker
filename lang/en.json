@@ -339,5 +339,17 @@
     "groups_tab_discover": "Discover",
     "groups_empty_state_desc": "It looks like you haven't joined or created any groups yet. Start your own community!",
     "groups_no_suggestions_title": "No Suggestions",
-    "groups_no_suggestions_desc": "There are no public groups to suggest at the moment. Why not create one?"
+    "groups_no_suggestions_desc": "There are no public groups to suggest at the moment. Why not create one?",
+    "hall_of_fame_title": "Hall of Fame",
+    "wins_label": "Wins",
+    "tab_active": "Active",
+    "tab_history": "History",
+    "groups_no_past_challenges": "No finished challenges yet.",
+    "status_ended": "Ended",
+    "winner_label": "Winner",
+    "challenge_ended_at": "Ended on",
+    "challenges_search_placeholder": "Search challenges...",
+    "filter_all_types": "All Types",
+    "challenges_no_results": "No challenges found matching your filters.",
+    "btn_clear_filters": "Clear Filters"
 }

@@ -70,6 +70,47 @@ class GroupService
     }
 
 
+    public function groupPastChallenges(Group $group): Collection
+    {
+        return $group->challenges()
+            ->where('end_date', '<', now())
+            ->orderBy('end_date', 'desc')
+            ->take(20)
+            ->get()
+            ->map(function ($challenge) {
+                $challenge->leaderboard = (new ChallengeService)->getLeaderboard($challenge);
+                return $challenge;
+            });
+    }
+
+
+    public function getHallOfFame(Collection $pastChallenges): Collection
+    {
+        $wins = [];
+
+        foreach ($pastChallenges as $challenge) {
+            $winner = $challenge->leaderboard->first();
+
+            if ($winner) {
+                $userId = $winner->user->id;
+                if (!isset($wins[$userId])) {
+                    $wins[$userId] = [
+                        'user' => $winner->user,
+                        'wins' => 0,
+                        'latest_win' => $challenge->name
+                    ];
+                }
+                $wins[$userId]['wins']++;
+            }
+        }
+
+        return collect($wins)
+            ->sortByDesc('wins')
+            ->values()
+            ->take(5);
+    }
+
+
     public function userCanCreateChallenge(User $user, Group $group)
     {
         return $group->users()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Group\CreateGroupRequest;
+use App\Http\Requests\Group\LeaveGroupRequest;
 use App\Models\Group;
 use App\Models\User;
 use App\Services\GroupService;
@@ -42,6 +43,10 @@ class GroupController extends Controller
         ]);
 
         $activeChallenges = $this->groupService->groupActiveChallenges($group);
+        $pastChallenges = $this->groupService->groupPastChallenges($group);
+
+        $hallOfFame = $this->groupService->getHallOfFame($pastChallenges);
+
         $currentUserPivot = $group->users()
             ->where('user_id', Auth::id())
             ->first()
@@ -50,6 +55,8 @@ class GroupController extends Controller
         return Inertia::render('Groups/Show', [
             'group' => $group->load('users'),
             'challenges' => $activeChallenges,
+            'pastChallenges' => $pastChallenges,
+            'hallOfFame' => $hallOfFame,
             'membership' => [
                 'is_member' => $currentUserPivot && $currentUserPivot->status === 'active',
                 'is_pending' => $currentUserPivot && $currentUserPivot->status === 'pending',
@@ -75,23 +82,16 @@ class GroupController extends Controller
     }
 
 
-    public function leave(Request $request, Group $group)
+    public function leave(LeaveGroupRequest $request, Group $group)
     {
-        // Validar opcionalmente o new_admin_id
-        $request->validate([
-            'new_admin_id' => 'nullable|exists:users,id'
-        ]);
-
         $newAdminId = $request->input('new_admin_id');
 
         $result = $this->groupService->leaveGroup($group, Auth::user(), $newAdminId);
 
-        // Se o grupo foi eliminado ou saiu com sucesso
         if ($result['type'] === 'success') {
             return redirect()->route('groups.index')->with('success', $result['message']);
         }
 
-        // Se houve erro (ex: precisa de sucessor)
         return back()->with('error', $result['message']);
     }
 

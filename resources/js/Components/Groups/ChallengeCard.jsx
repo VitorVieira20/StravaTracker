@@ -1,9 +1,11 @@
 import { Timer, MapPin, TrendingUp, Medal } from 'lucide-react';
 import useTranslation from '@/Hooks/useTranslation';
 
-export default function ChallengeCard({ auth, challenge }) {
+export default function ChallengeCard({ auth, challenge, isPast = false }) {
     const { t, locale } = useTranslation();
     const currentUser = auth.user;
+
+    const winner = isPast && challenge.leaderboard.length > 0 ? challenge.leaderboard[0] : null;
 
     const getIcon = () => {
         switch (challenge.type) {
@@ -25,21 +27,42 @@ export default function ChallengeCard({ auth, challenge }) {
     const endDateFormatted = new Date(challenge.end_date).toLocaleDateString(locale);
 
     return (
-        <div className="bg-[#27272a] rounded-3xl border border-gray-800 overflow-hidden flex flex-col h-full">
-            <div className="p-6 border-b border-gray-800 bg-[#202023]">
+        <div className={`rounded-3xl border overflow-hidden flex flex-col h-full ${isPast
+            ? 'bg-[#18181b] border-gray-800'
+            : 'bg-[#27272a] border-gray-700 shadow-xl'
+            }`}>
+            <div className={`p-6 border-b ${isPast ? 'bg-[#18181b] border-gray-800' : 'bg-[#202023] border-gray-700'}`}>
                 <div className="flex justify-between items-start mb-2">
                     <div className="flex items-center gap-2 text-[#FC4C02] text-xs font-bold uppercase tracking-wider">
                         {getIcon()}
-                        <span>{t(`challenge_type_${challenge.type}`) || challenge.type.replace('_', ' ')}</span> 
+                        <span>{t(`challenge_type_${challenge.type}`) || challenge.type.replace('_', ' ')}</span>
                     </div>
-                    <span className="text-[10px] bg-green-500/10 text-green-500 border border-green-500/20 px-2 py-1 rounded-full font-bold uppercase">
-                        {t('challenge_running')} {/* Traduzido */}
-                    </span>
+
+                    {isPast ? (
+                        <span className="text-[10px] bg-gray-700 text-gray-300 border border-gray-600 px-2 py-1 rounded-full font-bold uppercase">
+                            {t('status_ended')}
+                        </span>
+                    ) : (
+                        <span className="text-[10px] bg-green-500/10 text-green-500 border border-green-500/20 px-2 py-1 rounded-full font-bold uppercase animate-pulse">
+                            {t('challenge_running')}
+                        </span>
+                    )}
                 </div>
-                <h3 className="text-lg font-bold text-white mb-1">{challenge.name}</h3>
+
+                <h3 className={`text-lg font-bold mb-1 ${isPast ? 'text-gray-300' : 'text-white'}`}>
+                    {challenge.name}
+                </h3>
+
                 <p className="text-xs text-gray-500">
-                    {t('challenge_ends_at')} {endDateFormatted}
+                    {isPast ? t('challenge_ended_at') : t('challenge_ends_at')} {endDateFormatted}
                 </p>
+
+                {winner && isPast && (
+                    <div className="mt-3 flex items-center gap-2 text-yellow-500 text-xs font-bold bg-yellow-500/10 px-3 py-2 rounded-lg border border-yellow-500/20">
+                        <Medal size={14} />
+                        <span>{t('winner_label')}: {winner.user.name}</span>
+                    </div>
+                )}
             </div>
 
             <div className="flex-1 p-0 overflow-y-auto max-h-75 scrollbar-hide">

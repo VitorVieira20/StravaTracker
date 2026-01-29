@@ -339,5 +339,17 @@
     "groups_tab_discover": "Descubrir",
     "groups_empty_state_desc": "Parece que aún no te has unido o creado ningún grupo. ¡Crea tu propia comunidad!",
     "groups_no_suggestions_title": "Sin Sugerencias",
-    "groups_no_suggestions_desc": "Por el momento no hay grupos públicos para sugerir. ¿Por qué no creas uno?"
+    "groups_no_suggestions_desc": "Por el momento no hay grupos públicos para sugerir. ¿Por qué no creas uno?",
+    "hall_of_fame_title": "Salón de la Fama",
+    "wins_label": "Victorias",
+    "tab_active": "Activos",
+    "tab_history": "Historial",
+    "groups_no_past_challenges": "Aún no hay desafíos terminados.",
+    "status_ended": "Finalizado",
+    "winner_label": "Ganador",
+    "challenge_ended_at": "Finalizó el",
+    "challenges_search_placeholder": "Buscar desafíos...",
+    "filter_all_types": "Todos los Tipos",
+    "challenges_no_results": "No se encontraron desafíos con estos filtros.",
+    "btn_clear_filters": "Limpiar Filtros"
 }

@@ -65,7 +65,7 @@ export default function LeaveGroupModal({ isOpen, onClose, group, users, t }) {
                 </div>
 
                 <div className="flex gap-3">
-                    <button type="button" onClick={onClose} className="flex-1 py-3 rounded-xl border border-gray-700 text-gray-400 font-semibold hover:bg-white/5 transition-colors">
+                    <button type="button" onClick={onClose} className="flex-1 py-3 rounded-xl border border-gray-700 text-gray-400 font-semibold hover:bg-white/5 transition-colors cursor-pointer">
                         {t('btn_cancel')}
                     </button>
                     <button
@@ -74,7 +74,7 @@ export default function LeaveGroupModal({ isOpen, onClose, group, users, t }) {
                         className={`flex-1 py-3 rounded-xl font-semibold shadow-lg transition-all ${!selectedUserId || processing
                                 ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
                                 : 'bg-[#FC4C02] hover:bg-[#e34402] text-white shadow-orange-900/20'
-                            }`}
+                            } cursor-pointer`}
                     >
                         {t('btn_promote_and_leave')}
                     </button>

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Http\Requests\Group\CreateGroupRequest;
 use App\Models\Group;
+use App\Models\GroupInvitation;
 use App\Models\User;
 use Illuminate\Support\Collection;
 
@@ -224,5 +225,120 @@ class GroupService
         $group->users()->detach($userId);
 
         return ['type' => 'success', 'message' => __('groups_messages_remove_success')];
+    }
+
+
+    public function searchGroups(User $user, string $query, string $filter = 'newest'): Collection
+    {
+        $q = Group::query()
+            ->withCount([
+                'users' => function ($query) {
+                    $query->where('group_user.status', 'active');
+                },
+                'challenges' => function ($query) {
+                    $query->where('end_date', '>=', now());
+                }
+            ])
+            ->where('privacy', 'public')
+            ->whereNotIn('id', $user->groups->pluck('id'));
+
+        if (!empty($query)) {
+            $q->where('name', 'like', "%{$query}%");
+        }
+
+        switch ($filter) {
+            case 'most_members':
+                $q->orderByDesc('users_count');
+                break;
+            case 'active':
+                $q->orderByDesc('challenges_count');
+                break;
+            default:
+                $q->orderByDesc('created_at');
+        }
+
+        return $q->take(12)->get();
+    }
+
+
+    public function inviteUser(Group $group, User $inviter, int $userId): array
+    {
+        $receiver = null;
+
+        $receiver = User::find($userId);
+
+        if (!$receiver) {
+            return ['type' => 'error', 'message' => __('groups_invite_user_not_found')];
+        }
+
+        // 2. Verificar se já é membro
+        if ($group->users()->where('user_id', $receiver->id)->exists()) {
+            return ['type' => 'error', 'message' => __('groups_invite_already_member')];
+        }
+
+        // 3. Verificar se já foi convidado
+        $exists = GroupInvitation::where('group_id', $group->id)
+            ->where('receiver_id', $receiver->id)
+            ->where('status', 'pending')
+            ->exists();
+
+        if ($exists) {
+            return ['type' => 'error', 'message' => __('groups_invite_already_sent')];
+        }
+
+        // 4. Criar convite
+        GroupInvitation::create([
+            'group_id' => $group->id,
+            'inviter_id' => $inviter->id,
+            'receiver_id' => $receiver->id,
+        ]);
+
+        return ['type' => 'success', 'message' => __('groups_invite_sent_success')];
+    }
+
+
+    public function getUserInvitations(User $user): Collection
+    {
+        return GroupInvitation::where('receiver_id', $user->id)
+            ->where('status', 'pending')
+            ->with(['group', 'inviter'])
+            ->get();
+    }
+
+
+    public function getUserAdminGroups(User $user): Collection
+    {
+        return $user->groups()
+            ->wherePivot('role', 'admin')
+            ->wherePivot('status', 'active')
+            ->select('groups.id', 'groups.name')
+            ->get();
+    }
+
+
+    public function respondInvitation(int $invitationId, User $user, bool $accept): array
+    {
+        $invitation = GroupInvitation::findOrFail($invitationId);
+
+        if ($invitation->receiver_id !== $user->id) {
+            return ['type' => 'success', 'message' => __('groups_invite_not_permissions')];
+        }
+
+        if ($accept) {
+            if (!$invitation->group->users()->where('user_id', $user->id)->exists()) {
+                $invitation->group->users()->attach($user->id, [
+                    'role' => 'member',
+                    'status' => 'active'
+                ]);
+            }
+
+            $invitation->update(['status' => 'accepted']);
+            $msg = __('groups_invite_accepted');
+        } else {
+            $invitation->update(['status' => 'rejected']);
+            $msg = __('groups_invite_rejected');
+        }
+
+        return ['type' => 'success', 'message' => $msg];
     }
 }

@@ -25,4 +25,10 @@ class Group extends Model
     {
         return $this->hasMany(Challenge::class);
     }
+
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
 }

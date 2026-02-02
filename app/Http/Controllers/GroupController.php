@@ -18,18 +18,29 @@ class GroupController extends Controller
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
 
+        $searchQuery = $request->input('search');
+        $filter = $request->input('filter', 'newest');
+
         $myGroups = $this->groupService->userGroups($user);
         $pendingGroups = $this->groupService->userPendingGroups($user);
-        $suggestedGroups = $this->groupService->suggestedGroups($user);
+        $myInvitations = $this->groupService->getUserInvitations($user);
+
+        if ($request->filled('search') || $request->filled('filter')) {
+            $suggestedGroups = $this->groupService->searchGroups($user, $searchQuery ?? '', $filter);
+        } else {
+            $suggestedGroups = $this->groupService->suggestedGroups($user);
+        }
 
         return Inertia::render('Groups/Index', [
             'myGroups' => $myGroups,
             'pendingGroups' => $pendingGroups,
+            'myInvitations' => $myInvitations,
             'suggestedGroups' => $suggestedGroups,
+            'filters' => ['search' => $searchQuery, 'filter' => $filter]
         ]);
     }
 
@@ -52,6 +63,11 @@ class GroupController extends Controller
             ->first()
                 ?->pivot;
 
+        $authManagedGroups = [];
+        if (Auth::check()) {
+            $authManagedGroups = $this->groupService->getUserAdminGroups(Auth::user());
+        }
+
         return Inertia::render('Groups/Show', [
             'group' => $group->load('users'),
             'challenges' => $activeChallenges,
@@ -62,6 +78,7 @@ class GroupController extends Controller
                 'is_pending' => $currentUserPivot && $currentUserPivot->status === 'pending',
                 'is_admin' => $currentUserPivot && $currentUserPivot->role === 'admin',
             ],
+            'authManagedGroups' => $authManagedGroups,
         ]);
     }
 
@@ -105,6 +122,30 @@ class GroupController extends Controller
     public function remove(Group $group, User $user)
     {
         $result = $this->groupService->removeMember($group, $user->id);
+        return back()->with($result['type'], $result['message']);
+    }
+
+
+    public function invite(Request $request, Group $group)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id|required_without:email',
+        ]);
+
+        $result = $this->groupService->inviteUser(
+            $group,
+            Auth::user(),
+            $request->input('user_id')
+        );
+
+        return back()->with($result['type'], $result['message']);
+    }
+
+
+    public function respondInvite(Request $request, $invitationId)
+    {
+        $accept = $request->boolean('accept');
+        $result = $this->groupService->respondInvitation($invitationId, Auth::user(), $accept);
         return back()->with($result['type'], $result['message']);
     }
 }

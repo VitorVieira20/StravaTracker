@@ -1,5 +1,5 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import useTranslation from '@/Hooks/useTranslation';
 import { useState } from 'react';
 import CreateChallengeModal from '../../Components/Groups/CreateChallenge';
@@ -9,12 +9,13 @@ import ChallengesTab from '../../Components/Groups/ChallengesTab';
 import LeaveGroupModal from '../../Components/Modals/Groups/LeaveGroup';
 import ConfirmLeaveModal from '../../Components/Modals/Groups/ConfirmLeave';
 
-export default function GroupShow({ auth, group, challenges, pastChallenges, hallOfFame, membership }) {
+export default function GroupShow({ auth, group, challenges, pastChallenges, hallOfFame, membership, authManagedGroups }) {
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState('challenges');
     const [isChallengeModalOpen, setIsChallengeModalOpen] = useState(false);
     const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
     const { post, delete: destroy, processing } = useForm();
 
@@ -77,12 +78,31 @@ export default function GroupShow({ auth, group, challenges, pastChallenges, hal
                             <span className="bg-[#FC4C02] text-white text-[10px] font-bold px-2 py-1 rounded uppercase mb-2 inline-block">
                                 {t('group_label')}
                             </span>
-                            <h1 className="text-4xl md:text-5xl font-bold mb-2 leading-tight">
+                            <h1 className="text-4xl md:text-5xl font-bold mb-2 leading-tight break-words">
                                 {group.name}
                             </h1>
-                            <p className="text-gray-300 max-w-2xl line-clamp-2 md:line-clamp-none">
-                                {group.description}
-                            </p>
+
+                            <div className="max-w-2xl">
+                                <p
+                                    className={`text-gray-300 wrap-break-word whitespace-pre-line transition-all duration-300 ${isDescriptionExpanded ? '' : 'line-clamp-2 md:line-clamp-3'
+                                        }`}
+                                >
+                                    {group.description}
+                                </p>
+
+                                {group.description && group.description.length > 100 && (
+                                    <button
+                                        onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                                        className="text-[#FC4C02] text-xs font-bold mt-2 hover:text-white transition-colors flex items-center gap-1 cursor-pointer"
+                                    >
+                                        {isDescriptionExpanded ? (
+                                            <>{t('btn_show_less') || 'Show Less'} <ChevronUp size={12} /></>
+                                        ) : (
+                                            <>{t('btn_read_more') || 'Read More'} <ChevronDown size={12} /></>
+                                        )}
+                                    </button>
+                                )}
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-4 shrink-0 pb-1">
@@ -157,7 +177,7 @@ export default function GroupShow({ auth, group, challenges, pastChallenges, hal
                 )}
 
                 {activeTab === 'members' && (
-                    <MembersTab auth={auth} t={t} group={group} membership={membership} />
+                    <MembersTab auth={auth} t={t} group={group} membership={membership} authManagedGroups={authManagedGroups} />
                 )}
 
             </div>

@@ -1,15 +1,17 @@
 import { router } from "@inertiajs/react";
-import { Calendar, Crown, Search, Shield, Trash2 } from "lucide-react";
+import { Calendar, Crown, Search, Shield, Trash2, UserPlus } from "lucide-react";
 import { useState } from "react";
 import { route } from "ziggy-js";
 import KickMemberModal from "../Modals/Groups/KickMember";
+import InviteMemberToMyGroupModal from "../Modals/Groups/InviteUser";
 
-export default function MembersTab({ auth, t, group, membership }) {
+export default function MembersTab({ auth, t, group, membership, authManagedGroups = [] }) {
     const [memberSearch, setMemberSearch] = useState("");
     const [userToKick, setUserToKick] = useState(null);
     const [isKickModalOpen, setIsKickModalOpen] = useState(false);
     const [processingKick, setProcessingKick] = useState(false);
-
+    
+    const [inviteModalUser, setInviteModalUser] = useState(null);
 
     const pendingUsers = group.users.filter(u => u.pivot.status === 'pending');
     const activeUsers = group.users.filter(u => u.pivot.status === 'active');
@@ -27,7 +29,6 @@ export default function MembersTab({ auth, t, group, membership }) {
         setIsKickModalOpen(true);
     };
 
-    // NOVA: Função para confirmar a expulsão
     const handleConfirmKick = () => {
         if (!userToKick) return;
         setProcessingKick(true);
@@ -76,6 +77,7 @@ export default function MembersTab({ auth, t, group, membership }) {
                     </div>
                 </div>
             )}
+            
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
                 <div className="relative w-full sm:w-72">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
@@ -100,12 +102,9 @@ export default function MembersTab({ auth, t, group, membership }) {
                         const isAdmin = user.pivot.role === 'admin';
                         const isMe = user.id === auth.user.id;
                         const isOwner = group.owner_id === user.id;
-
-                        // Só posso expulsar se:
-                        // 1. Eu for Admin
-                        // 2. O alvo não for eu mesmo
-                        // 3. O alvo não for o Dono do grupo
                         const canKick = membership.is_admin && !isMe && !isOwner;
+                        
+                        const canInvite = !isMe && authManagedGroups.length > 0;
 
                         return (
                             <div
@@ -118,20 +117,38 @@ export default function MembersTab({ auth, t, group, membership }) {
                                     }
                             `}
                             >
-                                {canKick && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            openKickModal(user);
-                                        }}
-                                        className="absolute top-1 right-1 text-red-500 hover:text-red-600 transition-colors p-1 z-10 
+                                <div className="absolute top-1 right-1 flex gap-1 z-10">
+                                    
+                                    {canInvite && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setInviteModalUser(user);
+                                            }}
+                                            className="text-gray-400 hover:text-white transition-colors p-1 
                                                 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 
                                                 bg-[#27272a]/80 lg:bg-transparent backdrop-blur-sm lg:backdrop-blur-none rounded-full cursor-pointer"
-                                        title={t('groups_btn_kick')}
-                                    >
-                                        <Trash2 size={18} /> 
-                                    </button>
-                                )}
+                                            title={t('btn_invite_to_my_group')}
+                                        >
+                                            <UserPlus size={18} /> 
+                                        </button>
+                                    )}
+
+                                    {canKick && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                openKickModal(user);
+                                            }}
+                                            className="text-red-500 hover:text-red-600 transition-colors p-1 
+                                                opacity-100 lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 
+                                                bg-[#27272a]/80 lg:bg-transparent backdrop-blur-sm lg:backdrop-blur-none rounded-full cursor-pointer"
+                                            title={t('groups_btn_kick')}
+                                        >
+                                            <Trash2 size={18} /> 
+                                        </button>
+                                    )}
+                                </div>
 
                                 {isAdmin && !canKick && (
                                     <div className="absolute top-3 right-3 text-[#FC4C02]" title={t('members_role_admin')}>
@@ -192,6 +209,14 @@ export default function MembersTab({ auth, t, group, membership }) {
                 onConfirm={handleConfirmKick}
                 user={userToKick}
                 processing={processingKick}
+                t={t}
+            />
+
+            <InviteMemberToMyGroupModal
+                isOpen={!!inviteModalUser} 
+                onClose={() => setInviteModalUser(null)} 
+                targetUser={inviteModalUser}
+                myAdminGroups={authManagedGroups}
                 t={t}
             />
         </div>

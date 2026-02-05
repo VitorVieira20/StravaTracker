@@ -376,5 +376,20 @@
     "invite_to_another_group_desc": "Seleziona uno dei tuoi gruppi per invitare l'utente",
     "select_group_label": "Seleziona Gruppo",
     "no_admin_groups_found": "Non gestisci nessun altro gruppo.",
-    "btn_invite_to_my_group": "Invita nei miei gruppi"
+    "btn_invite_to_my_group": "Invita nei miei gruppi",
+    "error_401_title": "Non Autorizzato",
+    "error_401_desc": "Devi effettuare il login per accedere a questa pagina.",
+    "error_402_title": "Pagamento Richiesto",
+    "error_402_desc": "Abbonamento richiesto per accedere a questa funzione.",
+    "error_403_title": "Accesso Negato",
+    "error_403_desc": "Non hai il permesso di visualizzare questa pagina.",
+    "error_404_title": "Fuori Percorso",
+    "error_404_desc": "Sembra che tu ti sia perso sulla mappa. Questa pagina non esiste.",
+    "error_405_title": "Metodo Non Consentito",
+    "error_405_desc": "Questa azione non è consentita per questa risorsa.",
+    "error_500_title": "Errore del Server",
+    "error_500_desc": "Abbiamo colpito un muro. Il nostro team sta già risolvendo il problema.",
+    "error_generic_title": "Errore Sconosciuto",
+    "error_generic_desc": "Si è verificato un errore imprevisto.",
+    "btn_back_home": "Torna alla Dashboard"
 }

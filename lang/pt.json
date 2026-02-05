@@ -376,5 +376,20 @@
     "invite_to_another_group_desc": "Selecione um dos seus grupos para convidar o utilizador",
     "select_group_label": "Selecionar Grupo",
     "no_admin_groups_found": "Não geres nenhum outro grupo.",
-    "btn_invite_to_my_group": "Convidar para os meus grupos"
+    "btn_invite_to_my_group": "Convidar para os meus grupos",
+    "error_401_title": "Não Autorizado",
+    "error_401_desc": "Precisas de fazer login para aceder a esta página.",
+    "error_402_title": "Pagamento Necessário",
+    "error_402_desc": "É necessária uma subscrição para aceder a este recurso.",
+    "error_403_title": "Acesso Negado",
+    "error_403_desc": "Não tens permissão para visualizar esta página.",
+    "error_404_title": "Fora de Rota",
+    "error_404_desc": "Parece que te perdeste no mapa. Esta página não existe.",
+    "error_405_title": "Método Não Permitido",
+    "error_405_desc": "Esta ação não é permitida para este recurso.",
+    "error_500_title": "Erro de Servidor",
+    "error_500_desc": "Bateu no muro. A nossa equipa já está a resolver o problema.",
+    "error_generic_title": "Erro Desconhecido",
+    "error_generic_desc": "Aconteceu algo inesperado.",
+    "btn_back_home": "Voltar ao Início"
 }

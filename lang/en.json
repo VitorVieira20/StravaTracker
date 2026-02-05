@@ -376,5 +376,20 @@
     "invite_to_another_group_desc": "Select one of your groups to invite the user",
     "select_group_label": "Select Group",
     "no_admin_groups_found": "You don't manage any other group.",
-    "btn_invite_to_my_group": "Invite to my groups"
+    "btn_invite_to_my_group": "Invite to my groups",
+    "error_401_title": "Unauthorized",
+    "error_401_desc": "You need to log in to access this page.",
+    "error_402_title": "Payment Required",
+    "error_402_desc": "Subscription required to access this feature.",
+    "error_403_title": "Access Denied",
+    "error_403_desc": "You don't have permission to view this page.",
+    "error_404_title": "Off Track",
+    "error_404_desc": "Looks like you got lost on the map. This page doesn't exist.",
+    "error_405_title": "Method Not Allowed",
+    "error_405_desc": "This action is not allowed for this resource.",
+    "error_500_title": "Server Error",
+    "error_500_desc": "We hit a wall. Our team is already fixing the issue.",
+    "error_generic_title": "Unknown Error",
+    "error_generic_desc": "Something unexpected happened.",
+    "btn_back_home": "Back to Dashboard"
 }

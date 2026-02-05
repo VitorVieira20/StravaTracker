@@ -376,5 +376,20 @@
     "invite_to_another_group_desc": "Sélectionnez l'un de vos groupes pour inviter l'utilisateur",
     "select_group_label": "Sélectionner un groupe",
     "no_admin_groups_found": "Vous ne gérez aucun autre groupe.",
-    "btn_invite_to_my_group": "Inviter dans mes groupes"
+    "btn_invite_to_my_group": "Inviter dans mes groupes",
+    "error_401_title": "Non Autorisé",
+    "error_401_desc": "Vous devez vous connecter pour accéder à cette page.",
+    "error_402_title": "Paiement Requis",
+    "error_402_desc": "Abonnement requis pour accéder à cette fonctionnalité.",
+    "error_403_title": "Accès Refusé",
+    "error_403_desc": "Vous n'avez pas la permission de voir cette page.",
+    "error_404_title": "Hors Piste",
+    "error_404_desc": "On dirait que vous êtes perdu sur la carte. Cette page n'existe pas.",
+    "error_405_title": "Méthode Non Autorisée",
+    "error_405_desc": "Cette action n'est pas autorisée pour cette ressource.",
+    "error_500_title": "Erreur Serveur",
+    "error_500_desc": "Nous avons heurté un mur. Notre équipe résout déjà le problème.",
+    "error_generic_title": "Erreur Inconnue",
+    "error_generic_desc": "Quelque chose d'inattendu s'est produit.",
+    "btn_back_home": "Retour à l'Accueil"
 }

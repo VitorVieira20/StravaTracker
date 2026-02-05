@@ -1,5 +1,6 @@
 import { Head, useForm } from '@inertiajs/react';
 import useTranslation from '@/Hooks/useTranslation';
+import { Info } from 'lucide-react';
 
 export default function SetGoal({ goal }) {
     const { t } = useTranslation();
@@ -99,7 +100,13 @@ export default function SetGoal({ goal }) {
                                 onChange={e => setData('start_date', e.target.value)}
                                 className="w-full bg-[#18181b] border border-gray-700 rounded-xl p-3 text-white focus:border-[#FC4C02] focus:ring-0 [&::-webkit-calendar-picker-indicator]:invert cursor-pointer"
                             />
-                            <p className="text-[10px] text-gray-500 mt-1">{t('help_start_date')}</p>
+
+                            <div className="flex items-start gap-2 mt-2 bg-blue-500/10 border border-blue-500/20 p-2 rounded-lg">
+                                <Info size={14} className="text-blue-400 shrink-0 mt-0.5" />
+                                <p className="text-[10px] text-gray-300 leading-tight">
+                                    {t('help_start_date')}
+                                </p>
+                            </div>
                         </div>
                     </div>
 

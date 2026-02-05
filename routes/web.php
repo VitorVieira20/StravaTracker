@@ -23,10 +23,14 @@ Route::middleware('auth.redirect')->group(function () {
 
 
     // RACE GOAL
-    Route::get('/setup-goal', [RaceGoalController::class, 'create'])->name('goals.create');
-    Route::post('/setup-goal', [RaceGoalController::class, 'store'])->name('goals.store');
-    Route::get('/goal/edit', [RaceGoalController::class, 'edit'])->name('goals.edit');
-    Route::put('/goal/update', [RaceGoalController::class, 'update'])->name('goals.update');
+    Route::controller(RaceGoalController::class)->group(function () {
+        Route::middleware('goal.redirect')->group(function () {
+            Route::get('/setup-goal', 'create')->name('goals.create');
+            Route::post('/setup-goal', 'store')->name('goals.store');
+        });
+        Route::get('/goal/edit', 'edit')->name('goals.edit');
+        Route::put('/goal/update', 'update')->name('goals.update');
+    });
 
 
     // LOGOUT
@@ -34,17 +38,19 @@ Route::middleware('auth.redirect')->group(function () {
 
 
     // ACTIVITIES
-    Route::get('/activities/export', [ActivityController::class, 'export'])->name('activities.export');
-    Route::get('/activities', [ActivityController::class, 'index'])->name('activities.index');
-    Route::post('/activities/{activity}/fetch-laps', [ActivityController::class, 'fetchLaps'])->name('activities.fetch-laps');
-    Route::put('/activities/{activity}/laps', [ActivityController::class, 'updateLaps'])->name('activities.update-laps');
+    Route::controller(ActivityController::class)->prefix('/activities')->name('activities.')->group(function () {
+        Route::get('/export', 'export')->name('export');
+        Route::get('/', 'index')->name('index');
+        Route::post('/{activity}/fetch-laps', 'fetchLaps')->name('fetch-laps');
+        Route::put('/{activity}/laps', 'updateLaps')->name('update-laps');
+    });
 
 
     // SETTINGS
-    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
-    Route::get('/settings/export', [SettingsController::class, 'export'])->name('settings.export');
-    Route::get('/debug-strava', [SettingsController::class, 'debugStrava'])->name('debug.strava');
-
+    Route::controller(SettingsController::class)->prefix('/settings')->name('settings.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/export', 'export')->name('export');
+    });
 
     // PROFILE
     Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -55,29 +61,44 @@ Route::middleware('auth.redirect')->group(function () {
 
 
     // GROUPS AND CHALLENGES
-    Route::get('/groups', [GroupController::class, 'index'])->name('groups.index');
-    Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
-    Route::post('/groups/invitations/{id}/respond', [GroupController::class, 'respondInvite'])->name('groups.invite.respond');
-    Route::get('/groups/{group}', [GroupController::class, 'show'])->name('groups.show');
-    Route::post('/groups/{group}/join', [GroupController::class, 'join'])->name('groups.join');
-    Route::delete('/groups/{group}/leave', [GroupController::class, 'leave'])->name('groups.leave');
-    Route::post('/groups/{group}/invite', [GroupController::class, 'invite'])->name('groups.invite'); // Enviar convite
-    Route::post('/groups/{group}/challenges', [ChallengeController::class, 'store'])->name('challenges.store');
-    Route::post('/groups/{group}/members/{user}/approve', [GroupController::class, 'approve'])->name('groups.members.approve');
-    Route::delete('/groups/{group}/members/{user}/remove', [GroupController::class, 'remove'])->name('groups.members.remove');
+    Route::prefix('/groups')->name('groups.')->group(function () {
+        Route::controller(GroupController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'store')->name('store');
+
+            // Invites & Responses (Antes do wildcard {group})
+            Route::post('/invitations/{id}/respond', 'respondInvite')->name('invite.respond');
+
+            // Single Group Routes
+            Route::get('/{group}', 'show')->name('show');
+            Route::post('/{group}/join', 'join')->name('join');
+            Route::delete('/{group}/leave', 'leave')->name('leave');
+            Route::post('/{group}/invite', 'invite')->name('invite');
+
+            // Members Management
+            Route::post('/{group}/members/{user}/approve', 'approve')->name('members.approve');
+            Route::delete('/{group}/members/{user}/remove', 'remove')->name('members.remove');
+        });
+
+        // Challenges (Nested but distinct controller)
+        Route::post('/{group}/challenges', [ChallengeController::class, 'store'])->name('challenges.store'); // Nome corrigido para groups.challenges.store? Ou manténs challenges.store global?
+    });
 });
 
 Route::middleware('guest.redirect')->group(function () {
-    Route::get('/', [StaticPageController::class, 'welcome'])->name('welcome');
-    Route::get('/features', [StaticPageController::class, 'features'])->name('features');
-    Route::get('/privacy', [StaticPageController::class, 'privacy'])->name('privacy');
-    Route::get('/terms', [StaticPageController::class, 'terms'])->name('terms');
+    Route::controller(StaticPageController::class)->group(function () {
+        Route::get('/', 'welcome')->name('welcome');
+        Route::get('/features', 'features')->name('features');
+        Route::get('/privacy', 'privacy')->name('privacy');
+        Route::get('/terms', 'terms')->name('terms');
+    });
 
-    Route::get('/connect', [StravaAuthController::class, 'index'])->name('strava.index');
-
-    // STRAVA OAUTH AUTHENTICATION
-    Route::get('/auth/strava/redirect', [StravaAuthController::class, 'redirect'])->name('strava.redirect');
-    Route::get('/auth/strava/callback', [StravaAuthController::class, 'callback'])->name('strava.callback');
+    // STRAVA AUTH
+    Route::controller(StravaAuthController::class)->group(function () {
+        Route::get('/connect', 'index')->name('strava.index');
+        Route::get('/auth/strava/redirect', 'redirect')->name('strava.redirect');
+        Route::get('/auth/strava/callback', 'callback')->name('strava.callback');
+    });
 });
 
 

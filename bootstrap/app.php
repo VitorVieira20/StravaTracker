@@ -5,6 +5,7 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\RedirectIfNotAuthenticated;
 use App\Http\Middleware\SetUserLocale;
+use App\Http\Middleware\UserHasRaceGoalRedirect;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -25,6 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'auth.redirect' => RedirectIfNotAuthenticated::class,
             'guest.redirect' => RedirectIfAuthenticated::class,
             'admin.auth' => AdminAccess::class,
+            'goal.redirect' => UserHasRaceGoalRedirect::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

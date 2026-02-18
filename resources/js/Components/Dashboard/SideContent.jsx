@@ -30,19 +30,19 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
     };
 
     return (
-        <aside className="w-full lg:w-[30%] h-screen bg-[#000000] border-b lg:border-b-0 lg:border-r border-gray-800 flex flex-col justify-between p-6 lg:p-8 relative shrink-0 z-20">
+        <aside className="w-full lg:w-[30%] h-screen bg-[#000000] border-b lg:border-b-0 lg:border-r border-gray-800 flex flex-col justify-between p-6 lg:p-8 relative shrink-0 z-20 overflow-y-auto sidebar-scroll">
             <div>
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2 text-orange-500">
+                <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between mb-4">
+                    <div className="flex items-start xl:items-center space-x-2 text-orange-500 mb-4 xl:mb-0">
                         <Trophy size={20} className="lg:w-6 lg:h-6" />
                         <span className="text-xs lg:text-sm font-bold tracking-[0.2em] uppercase">{t('dash_goal_label')}</span>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex flex-row items-start xl:items-center gap-2">
                         <button
                             onClick={handleSync}
                             disabled={isSyncing}
-                            className={`p-2 rounded-full transition-all text-gray-400 hover:text-white hover:bg-gray-800 ${isSyncing ? 'animate-spin text-[#FC4C02]' : ''} cursor-pointer`}
+                            className={`pl-0 py-2 pr-2 xl:pl-2 rounded-full transition-all text-gray-400 hover:text-white hover:bg-gray-800 ${isSyncing ? 'animate-spin text-[#FC4C02]' : ''} cursor-pointer`}
                             title={t('tip_sync')}
                         >
                             <RefreshCw size={20} />
@@ -113,7 +113,7 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                 {prediction && (
                     <div className="flex items-center justify-between border-b border-gray-800 pb-4">
                         <div className="flex items-center gap-3">
-                            <div className="bg-gray-800 p-2 rounded-lg text-gray-400">
+                            <div className="hidden xl:block bg-gray-800 p-2 rounded-lg text-gray-400">
                                 <Timer size={18} />
                             </div>
                             <div>
@@ -122,7 +122,7 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
                             </div>
                         </div>
                         <div className="text-right">
-                            <span className="text-xl lg:text-2xl font-bold text-white block">{prediction.time_formatted}</span>
+                            <span className="text-lg xl:text-2xl font-bold text-white block">{prediction.time_formatted}</span>
                             <span className="text-xs text-[#FC4C02] font-mono">@{prediction.predicted_pace}/km</span>
                         </div>
                     </div>
@@ -130,8 +130,8 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
 
                 <div>
                     <div className="flex justify-between items-end mb-2">
-                        <span className="text-gray-400 uppercase text-xs lg:text-sm font-bold">{t('dash_weekly_goal')}</span>
-                        <span className="text-lg lg:text-xl font-bold text-white">
+                        <span className="text-gray-400 uppercase text-xs xl:text-sm font-bold">{t('dash_weekly_goal')}</span>
+                        <span className="text-base xl:text-xl font-bold text-white">
                             {weeklyDistance} <span className="text-sm text-gray-500">/ {weeklyGoal} km</span>
                         </span>
                     </div>
@@ -145,7 +145,7 @@ export default function DashboardSideContent({ raceGoal, stravaData }) {
 
                     <div className="mt-2 text-right">
                         {progressPercent >= 100 ? (
-                            <span className="text-green-500 font-bold flex justify-end items-center text-xs lg:text-sm">
+                            <span className="text-green-500 font-bold flex justify-end items-center text-xs xl:text-sm">
                                 <Zap size={14} className="mr-1" /> {t('dash_goal_met')}
                             </span>
                         ) : (

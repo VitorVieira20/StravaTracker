@@ -73,7 +73,7 @@ class WidgetController extends Controller
         $widgetService = new WidgetService($user);
         $stravaData = $widgetService->formatStravaData();
         $raceGoalData = $widgetService->formatRaceGoalData();
-        $history = $widgetService->formatActivitiesHistory();
+        $history = $widgetService->formatWeeklyHistory();
 
         return response()->json([
             "goal" => [

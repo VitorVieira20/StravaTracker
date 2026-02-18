@@ -152,4 +152,54 @@ class WidgetService
                 ];
             });
     }
+
+
+    public function formatWeeklyHistory()
+    {
+        $activities = $this->user->activities()
+            ->where('start_date_local', '>=', $this->raceGoal->start_date)
+            ->orderBy('start_date_local', 'desc')
+            ->get();
+
+        $grouped = $activities->groupBy(function ($act) {
+            return Carbon::parse($act->start_date_local)->format('o-W');
+        });
+
+        $historyGroups = [];
+
+        foreach ($grouped as $key => $weekActivities) {
+            $weekTotalKm = $weekActivities->sum('distance') / 1000;
+
+            $firstDate = Carbon::parse($weekActivities->first()->start_date_local);
+            $startOfWeek = $firstDate->copy()->startOfWeek();
+            $endOfWeek = $firstDate->copy()->endOfWeek();
+
+            $title = $startOfWeek->translatedFormat('d M') . ' - ' . $endOfWeek->translatedFormat('d M');
+
+            $formattedActivities = $weekActivities->map(function ($act) {
+                $paceSec = $act->distance > 0 ? $act->moving_time / ($act->distance / 1000) : 0;
+                return [
+                    'id' => $act->id,
+                    'name' => $act->name,
+                    'date_day' => Carbon::parse($act->start_date_local)->format('d'),
+                    'date_month' => Carbon::parse($act->start_date_local)->translatedFormat('M'),
+                    'weekday' => Carbon::parse($act->start_date_local)->translatedFormat('D, d M'),
+                    'distance' => number_format($act->distance / 1000, 2, '.', ''),
+                    'pace' => gmdate("i:s", $paceSec),
+                    'time' => gmdate("H:i:s", $act->moving_time),
+                    'calories' => (int) $act->calories,
+                ];
+            })->values();
+
+            $historyGroups[] = [
+                'id' => $key,
+                'title' => strtoupper($title),
+                'total_km' => round($weekTotalKm, 1),
+                'year' => $firstDate->year,
+                'activities' => $formattedActivities
+            ];
+        }
+
+        return array_values($historyGroups);
+    }
 }

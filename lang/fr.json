@@ -391,5 +391,12 @@
     "error_500_desc": "Nous avons heurté un mur. Notre équipe résout déjà le problème.",
     "error_generic_title": "Erreur Inconnue",
     "error_generic_desc": "Quelque chose d'inattendu s'est produit.",
-    "btn_back_home": "Retour à l'Accueil"
+    "btn_back_home": "Retour à l'Accueil",
+    "mobile_widget_title": "Widget Mobile",
+    "mobile_widget_description": "Copiez ce jeton pour configurer le widget sur votre téléphone.",
+    "mobile_widget_label": "Votre Jeton Personnel",
+    "mobile_widget_warning": "Ce jeton donne accès à vos données. Ne le partagez avec personne.",
+    "mobile_widget_hide": "Masquer",
+    "mobile_widget_show": "Afficher",
+    "mobile_widget_copy": "Copier"
 }

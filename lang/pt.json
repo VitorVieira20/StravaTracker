@@ -391,5 +391,12 @@
     "error_500_desc": "Bateu no muro. A nossa equipa já está a resolver o problema.",
     "error_generic_title": "Erro Desconhecido",
     "error_generic_desc": "Aconteceu algo inesperado.",
-    "btn_back_home": "Voltar ao Início"
+    "btn_back_home": "Voltar ao Início",
+    "mobile_widget_title": "Mobile Widget",
+    "mobile_widget_description": "Copia este token para configurar o widget no teu telemóvel.",
+    "mobile_widget_label": "O Teu Token Pessoal",
+    "mobile_widget_warning": "Este token dá acesso aos teus dados. Não o partilhes com ninguém.",
+    "mobile_widget_hide": "Ocultar",
+    "mobile_widget_show": "Mostrar",
+    "mobile_widget_copy": "Copiar"
 }

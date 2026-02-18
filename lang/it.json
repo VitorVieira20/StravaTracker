@@ -391,5 +391,12 @@
     "error_500_desc": "Abbiamo colpito un muro. Il nostro team sta già risolvendo il problema.",
     "error_generic_title": "Errore Sconosciuto",
     "error_generic_desc": "Si è verificato un errore imprevisto.",
-    "btn_back_home": "Torna alla Dashboard"
+    "btn_back_home": "Torna alla Dashboard",
+    "mobile_widget_title": "Widget Mobile",
+    "mobile_widget_description": "Copia questo token per configurare il widget sul tuo telefono.",
+    "mobile_widget_label": "Il Tuo Token Personale",
+    "mobile_widget_warning": "Questo token dà accesso ai tuoi dati. Non condividerlo con nessuno.",
+    "mobile_widget_hide": "Nascondi",
+    "mobile_widget_show": "Mostra",
+    "mobile_widget_copy": "Copia"
 }

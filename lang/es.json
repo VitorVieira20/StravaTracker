@@ -391,5 +391,12 @@
     "error_500_desc": "Nos dimos contra el muro. Nuestro equipo ya lo está solucionando.",
     "error_generic_title": "Error Desconocido",
     "error_generic_desc": "Ocurrió algo inesperado.",
-    "btn_back_home": "Volver al Inicio"
+    "btn_back_home": "Volver al Inicio",
+    "mobile_widget_title": "Widget Móvil",
+    "mobile_widget_description": "Copia este token para configurar el widget en tu móvil.",
+    "mobile_widget_label": "Tu Token Personal",
+    "mobile_widget_warning": "Este token da acceso a tus datos. No lo compartas con nadie.",
+    "mobile_widget_hide": "Ocultar",
+    "mobile_widget_show": "Mostrar",
+    "mobile_widget_copy": "Copiar"
 }

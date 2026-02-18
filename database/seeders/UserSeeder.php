@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             'Admin Runner', 
             'admin@runtracker.com', 
             'password', 
-            true // Is main user?
+            true
         );
         
         $this->command->info("✅ Admin created: admin@runtracker.com / password");
@@ -56,7 +56,6 @@ class UserSeeder extends Seeder
 
     private function setupFakeStrava(User $user)
     {
-        // Check if exists to avoid duplication
         if ($user->stravaAccount()->exists()) return;
         
         $user->stravaAccount()->create([

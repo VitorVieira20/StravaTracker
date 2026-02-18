@@ -391,5 +391,12 @@
     "error_500_desc": "We hit a wall. Our team is already fixing the issue.",
     "error_generic_title": "Unknown Error",
     "error_generic_desc": "Something unexpected happened.",
-    "btn_back_home": "Back to Dashboard"
+    "btn_back_home": "Back to Dashboard",
+    "mobile_widget_title": "Mobile Widget",
+    "mobile_widget_description": "Copy this token to configure the widget on your phone.",
+    "mobile_widget_label": "Your Personal Token",
+    "mobile_widget_warning": "This token grants access to your data. Do not share it with anyone.",
+    "mobile_widget_hide": "Hide",
+    "mobile_widget_show": "Show",
+    "mobile_widget_copy": "Copy"
 }

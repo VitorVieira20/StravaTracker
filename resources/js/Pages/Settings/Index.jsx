@@ -1,11 +1,23 @@
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { ArrowLeft, Globe, LifeBuoy, LogOut, Settings, Trophy, Tv, User, Download, ExternalLink, Route, Calendar } from 'lucide-react';
+import { ArrowLeft, Globe, LifeBuoy, LogOut, Settings, Trophy, Tv, User, Download, ExternalLink, Route, Calendar, EyeOff, Eye, Check, Copy, Smartphone } from 'lucide-react';
 import useTranslation from '@/Hooks/useTranslation';
 import { route } from 'ziggy-js';
+import { useState } from 'react';
 
 export default function SettingsIndex({ user, raceGoal }) {
     const { t } = useTranslation();
     const { locale } = usePage().props;
+
+    const [showToken, setShowToken] = useState(false);
+    const [copied, setCopied] = useState(false);
+
+    const widgetConnectToken = `${user.id}-${user.widget_token}`;
+
+    const handleCopyToken = () => {
+        navigator.clipboard.writeText(widgetConnectToken);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    };
 
     const changeLanguage = (e) => {
         router.post(route('language.update'), { locale: e.target.value }, {
@@ -115,6 +127,51 @@ export default function SettingsIndex({ user, raceGoal }) {
                     >
                         <Trophy size={16} /> {t('btn_edit_goal')}
                     </Link>
+                </SettingsCard>
+
+                <SettingsCard title={t('mobile_widget_title')} icon={Smartphone}>
+                    <p className="text-gray-400 text-sm">
+                        {t('mobile_widget_description')}
+                    </p>
+
+                    <div className="bg-[#18181b] p-4 rounded-2xl border border-gray-700 flex flex-col gap-3">
+                        <label className="text-xs font-bold text-gray-500 uppercase">
+                            {t('mobile_widget_label')}
+                        </label>
+
+                        <div className="relative flex items-center">
+                            <input
+                                type={showToken ? "text" : "password"}
+                                value={widgetConnectToken}
+                                readOnly
+                                className="w-full bg-[#27272a] border border-gray-600 text-gray-300 text-sm rounded-xl py-3 pl-4 pr-24 outline-none font-mono tracking-wide"
+                            />
+
+                            <div className="absolute right-2 flex items-center gap-1">
+                                <button
+                                    onClick={() => setShowToken(!showToken)}
+                                    className="p-2 text-gray-400 hover:text-white transition cursor-pointer"
+                                    title={showToken ? t('mobile_widget_hide') : t('mobile_widget_show')}
+                                >
+                                    {showToken ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                                <button
+                                    onClick={handleCopyToken}
+                                    className={`p-2 rounded-lg transition-all cursor-pointer ${copied ? 'bg-green-500/20 text-green-500' : 'bg-gray-700 text-white hover:bg-[#FC4C02]'}`}
+                                    title={t('mobile_widget_copy')}
+                                >
+                                    {copied ? <Check size={16} /> : <Copy size={16} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex items-start gap-2 mt-1">
+                            <span className="text-yellow-500 mt-0.5">⚠️</span>
+                            <p className="text-[10px] text-gray-500 leading-tight">
+                                {t('mobile_widget_warning')}
+                            </p>
+                        </div>
+                    </div>
                 </SettingsCard>
 
                 <SettingsCard
